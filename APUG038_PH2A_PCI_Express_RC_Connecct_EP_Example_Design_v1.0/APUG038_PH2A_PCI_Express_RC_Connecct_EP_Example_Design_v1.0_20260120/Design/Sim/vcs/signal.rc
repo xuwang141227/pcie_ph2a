@@ -1,0 +1,91 @@
+Magic 271485
+Revision Verdi_O-2018.09-SP2
+
+; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
+viewPort 0 643 1916 350 331 60
+
+; File list:
+; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
+openDirFile -d / "" "/users/dxguo/Workdir/project/bring_up/AL7000/PCIE/svn_rtl/svn_1207/pcie/case4_rc_2_ep/Sim/pcie_subsystem_tb.fsdb"
+
+; file time scale:
+; fileTimeScale ### s|ms|us|ns|ps
+
+; signal spacing:
+signalSpacing 5
+
+; windowTimeUnit is used for zoom, cursor & marker
+windowTimeUnit 1us
+
+; waveform viewport range
+zoom 238.167519 238.355850 1u
+cursor 238.262500
+marker 233.75269768800
+
+; user define markers
+; userMarker time_pos marker_name color linestyle
+; visible top row signal index
+top 29
+; marker line index
+markerPos 12
+
+; event list
+; addEvent event_name event_expression
+; curEvent event_name
+
+
+
+COMPLEX_EVENT_BEGIN
+
+
+COMPLEX_EVENT_END
+
+
+
+; toolbar current search type
+; curSTATUS search_type
+curSTATUS ByChange
+
+
+addGroup "G1"
+activeDirFile "" "/users/dxguo/Workdir/project/bring_up/AL7000/PCIE/svn_rtl/svn_1207/pcie/case4_rc_2_ep/Sim/pcie_subsystem_tb.fsdb"
+addSignal -h 15 /pcie_subsystem_tb/u_ph2_pcie_rc_top/u_pcie_rc_tx_engine/tl_mw_en
+addSignal -h 15 -holdScope tl_mw_addr[63:0]
+addSignal -h 15 -holdScope tl_mw_len[12:0]
+addSignal -h 15 /pcie_subsystem_tb/tb_ubus_wen
+addSignal -h 15 -holdScope tb_ubus_waddr[31:0]
+addSignal -h 15 -holdScope tb_ubus_wdata[31:0]
+addGroup "G2"
+addSignal -h 15 /pcie_subsystem_tb/u_ph2_pcie_rc_top/u_pcie_rc_tx_engine/tl_tx_prbs_send
+addSignal -h 15 -holdScope tl_tx_data[511:0]
+addSignal -h 15 -holdScope mwdata_cycle_valid[15:0]
+addSignal -h 15 -holdScope tl_tx_first_cycle
+addSignal -h 15 -holdScope tl_tx_eop
+addSignal -h 15 -holdScope tl_tx_err[7:0]
+addSignal -h 15 -holdScope tl_tx_sop
+addSignal -h 15 -holdScope tl_tx_stream
+addSignal -h 15 -holdScope tl_tx_valid[15:0]
+addSignal -h 15 -holdScope tl_tx_wait
+addSignal -h 15 -holdScope tl_tx_credits[95:0]
+addGroup "G3"
+addSignal -h 15 /pcie_subsystem_tb/u_ph2_pcie_rc_top/u_pcie_rc_rx_engine/tl_rx_wait
+addSignal -h 15 -holdScope tl_rx_masknp
+addSignal -h 15 -holdScope tl_rx_bardec[47:0]
+addSignal -h 15 -holdScope tl_rx_data[511:0]
+addSignal -h 15 -holdScope tl_rx_eop
+addSignal -h 15 -holdScope tl_rx_err[7:0]
+addSignal -h 15 -holdScope tl_rx_mchit[11:0]
+addSignal -h 15 -holdScope tl_rx_sop
+addSignal -h 15 -holdScope tl_rx_valid[15:0]
+addSignal -h 15 -holdScope cpld_flag
+addSignal -h 15 -holdScope tl_rx_valid_dly[15:0]
+addSignal -h 15 -holdScope tl_rx_data_dly[511:0]
+addSignal -h 15 -holdScope tl_rx_valid_dly2[15:0]
+addSignal -h 15 -holdScope tl_rx_data_dly2[511:0]
+addSignal -h 15 -holdScope prbs_input_data[511:0]
+addSignal -h 15 -holdScope o_alm_bits[15:0]
+addGroup "G4"
+
+; getSignalForm Scope Hierarchy Status
+; active file of getSignalForm
+

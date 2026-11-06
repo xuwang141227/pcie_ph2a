@@ -1,0 +1,3 @@
+set_ipinst_assignment {u0_ph2_pcie_ep_subsystem_pcie_top} {location=x147y0z0;}
+set_ipinst_assignment {u2_ph2_pcie_ep_subsystem_phy0_top} {location=x147y60z0;}
+set_ipinst_assignment {u4_ph2_pcie_ep_subsystem_phy1_top} {location=x147y0z0;}

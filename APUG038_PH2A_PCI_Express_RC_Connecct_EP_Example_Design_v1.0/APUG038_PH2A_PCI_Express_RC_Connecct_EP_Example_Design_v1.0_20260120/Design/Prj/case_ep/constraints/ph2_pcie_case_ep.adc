@@ -1,0 +1,37 @@
+#AP201.v1.0
+#set_pin_assignment	{ sys_clk }			    { LOCATION = AB15; IOSTANDARD = LVCMOS33; }  
+
+#set_pin_assignment	{ user_int_trigger }	{ LOCATION = M21; IOSTANDARD = LVCMOS12; }
+#set_pin_assignment	{ pcie_power_on_rst }	{ LOCATION = J21; IOSTANDARD = LVCMOS12; }
+#set_pin_assignment	{ pcie_mperst  }		{ LOCATION = K10; IOSTANDARD = LVCMOS33; }
+
+#set_pin_assignment	{ txd }					{ LOCATION = B10;  IOSTANDARD = LVCMOS33; }
+#set_pin_assignment	{ rxd }					{ LOCATION = A10;  IOSTANDARD = LVCMOS33; }
+
+#set_pin_assignment	{ debug_led[0] }		{ LOCATION = W13;  IOSTANDARD = LVCMOS33; }
+#set_pin_assignment	{ debug_led[1] }		{ LOCATION = W12;  IOSTANDARD = LVCMOS33; }
+#set_pin_assignment	{ debug_led[2] }		{ LOCATION = W15;  IOSTANDARD = LVCMOS33; }
+#set_pin_assignment	{ debug_led[3] }		{ LOCATION = Y16;  IOSTANDARD = LVCMOS33; }
+#set_pin_assignment	{ debug_led[4] }		{ LOCATION = Y13;  IOSTANDARD = LVCMOS33; }
+#set_pin_assignment	{ debug_led[5] }		{ LOCATION = AA13; IOSTANDARD = LVCMOS33; }
+#set_pin_assignment	{ debug_led[6] }		{ LOCATION = AD14; IOSTANDARD = LVCMOS33; }
+#set_pin_assignment	{ debug_led[7] }		{ LOCATION = AD13; IOSTANDARD = LVCMOS33; }
+
+
+#AP201 v2.0
+set_pin_assignment	{ debug_led[0] }	{ LOCATION = J23; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; }#led1
+set_pin_assignment	{ debug_led[1] }	{ LOCATION = J24; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; }#led2
+set_pin_assignment	{ debug_led[2] }	{ LOCATION = K26; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; }#led3
+set_pin_assignment	{ debug_led[3] }	{ LOCATION = K25; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; }#led4
+set_pin_assignment	{ debug_led[4] }	{ LOCATION = L25; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; }#led5
+set_pin_assignment	{ debug_led[5] }	{ LOCATION = L24; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; }#led6
+set_pin_assignment	{ debug_led[6] }	{ LOCATION = K23; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; }#led7
+set_pin_assignment	{ debug_led[7] }	{ LOCATION = K22; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; }#led8
+#set_pin_assignment	{ hxt_rxd }	{ LOCATION = J14; IOSTANDARD = LVCMOS18; PULLTYPE = PULLUP; }
+#set_pin_assignment	{ hxt_txd }	{ LOCATION = J15; IOSTANDARD = LVCMOS18; DRIVESTRENGTH = 8; PULLTYPE = NONE; }
+set_pin_assignment	{ pcie_mperst }	{ LOCATION = K10; IOSTANDARD = LVCMOS33;  }
+set_pin_assignment	{ pcie_power_on_rst }	{ LOCATION = C12; IOSTANDARD = LVCMOS18;  }
+set_pin_assignment	{ user_int_trigger }	{ LOCATION = B12; IOSTANDARD = LVCMOS18; }
+set_pin_assignment	{ rxd }	{ LOCATION = B14; IOSTANDARD = LVCMOS18; PULLTYPE = PULLUP; }
+set_pin_assignment	{ txd }	{ LOCATION = A14; IOSTANDARD = LVCMOS18; DRIVESTRENGTH = 8; PULLTYPE = NONE; }
+set_pin_assignment	{ sys_clk }	{ LOCATION = F10; IOSTANDARD = LVCMOS33; PULLTYPE = PULLUP; }

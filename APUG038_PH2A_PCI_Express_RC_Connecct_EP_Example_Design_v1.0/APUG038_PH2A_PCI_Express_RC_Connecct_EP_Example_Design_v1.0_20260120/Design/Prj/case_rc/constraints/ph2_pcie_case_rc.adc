@@ -1,0 +1,21 @@
+set_pin_assignment		{ sys_clk  	   }			{ LOCATION = AB15; IOSTANDARD = LVCMOS33; }
+
+set_pin_assignment		{ pcie_power_on_rst }	    { LOCATION = J21; IOSTANDARD = LVCMOS18;  }
+set_pin_assignment	    { pcie_mperst  }		    { LOCATION = K10; IOSTANDARD = LVCMOS33;  }
+
+set_pin_assignment		{ IO_si5345_sda }			{ LOCATION = A9; IOSTANDARD = LVCMOS33;   }
+set_pin_assignment		{ O_si5345_sck }			{ LOCATION = E11; IOSTANDARD = LVCMOS33;  }
+
+set_pin_assignment		{ txd }						{ LOCATION = B10;  IOSTANDARD = LVCMOS33; }
+set_pin_assignment		{ rxd }						{ LOCATION = A10;  IOSTANDARD = LVCMOS33; }
+
+set_pin_assignment		{ debug_led[0] }		    { LOCATION = W13;  IOSTANDARD = LVCMOS33; }
+set_pin_assignment		{ debug_led[1] }		    { LOCATION = W12;  IOSTANDARD = LVCMOS33; }
+set_pin_assignment		{ debug_led[2] }		    { LOCATION = W15;  IOSTANDARD = LVCMOS33; }
+set_pin_assignment		{ debug_led[3] }		    { LOCATION = Y16;  IOSTANDARD = LVCMOS33; }
+set_pin_assignment		{ debug_led[4] }		    { LOCATION = Y13;  IOSTANDARD = LVCMOS33; }
+set_pin_assignment		{ debug_led[5] }		    { LOCATION = AA13; IOSTANDARD = LVCMOS33; }
+set_pin_assignment		{ debug_led[6] }		    { LOCATION = AD14; IOSTANDARD = LVCMOS33; }
+set_pin_assignment		{ debug_led[7] }		    { LOCATION = AD13; IOSTANDARD = LVCMOS33; }
+
+
