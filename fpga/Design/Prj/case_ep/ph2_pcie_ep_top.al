@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Project Version="3" Minor="2" Path="/Projects/al6200/users/myang/AL7000/TD_TSET/TD6.2.2/APUG038_PH2A_PCI_Express_RC_Connecct_EP_Example_Design_v1.0/Design/Prj/case_rc">
+<!-- Last modified by TangDynasty Release_2026.2 -->
+<Project Version="3" Minor="2" Path=".">
     <Project_Created_Time></Project_Created_Time>
-    <TD_Version>6.2.186082</TD_Version>
-    <Name>ph2_pcie_rc_top</Name>
+    <TD_Version>6.2.3.210850</TD_Version>
+    <UCode>10101000</UCode>
+    <Name>ph2_pcie_ep_top</Name>
     <HardWare>
         <Family>PH2</Family>
         <Device>PH2A106FLG676</Device>
@@ -16,7 +18,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="1"/>
+                    <Attr Name="CompileOrder" Val="2"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/PCIE_REG_TABLE.v">
@@ -25,7 +27,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="2"/>
+                    <Attr Name="CompileOrder" Val="3"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/TLP_FMT_TYPE.v">
@@ -34,7 +36,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="3"/>
+                    <Attr Name="CompileOrder" Val="4"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/eram.v">
@@ -42,7 +44,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="4"/>
+                    <Attr Name="CompileOrder" Val="5"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/ph2_pcie_rst_sync.v">
@@ -50,7 +52,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="5"/>
+                    <Attr Name="CompileOrder" Val="6"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/ubus/bps_setting.v">
@@ -58,7 +60,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="6"/>
+                    <Attr Name="CompileOrder" Val="7"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/ubus/pcie_uart.v">
@@ -66,7 +68,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="7"/>
+                    <Attr Name="CompileOrder" Val="8"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/ubus/pcie_uprotocol.v">
@@ -74,7 +76,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="8"/>
+                    <Attr Name="CompileOrder" Val="9"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/ubus/uart_cdc.v">
@@ -82,7 +84,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="9"/>
+                    <Attr Name="CompileOrder" Val="10"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/ubus/uart_rx_setting.v">
@@ -90,7 +92,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="10"/>
+                    <Attr Name="CompileOrder" Val="11"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/ubus/uart_tx_setting.v">
@@ -98,7 +100,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="11"/>
+                    <Attr Name="CompileOrder" Val="12"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/ubus2pcie_apb.v">
@@ -106,7 +108,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="12"/>
+                    <Attr Name="CompileOrder" Val="13"/>
                 </FileInfo>
             </File>
             <File Path="../../Rtl/common/ubus2phy_apb.v">
@@ -114,18 +116,10 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="13"/>
-                </FileInfo>
-            </File>
-            <File Path="../../Rtl/rc_side/pcie_prbs/prbs_chk_pcie.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
                     <Attr Name="CompileOrder" Val="14"/>
                 </FileInfo>
             </File>
-            <File Path="../../Rtl/rc_side/pcie_prbs/prbs_gen_pcie.v">
+            <File Path="../../Rtl/ep_side/pcie_ep_int_handle.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -133,7 +127,7 @@
                     <Attr Name="CompileOrder" Val="15"/>
                 </FileInfo>
             </File>
-            <File Path="../../Rtl/rc_side/pcie_rc_int_handle.v">
+            <File Path="../../Rtl/ep_side/ubus_bridge/ep_ubus_bridge.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -141,7 +135,7 @@
                     <Attr Name="CompileOrder" Val="16"/>
                 </FileInfo>
             </File>
-            <File Path="../../Rtl/rc_side/pcie_rc_rx_engine.v">
+            <File Path="../../Rtl/ep_side/ph2_pcie_ep_top.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -149,15 +143,7 @@
                     <Attr Name="CompileOrder" Val="17"/>
                 </FileInfo>
             </File>
-            <File Path="../../Rtl/rc_side/pcie_rc_tx_engine.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="18"/>
-                </FileInfo>
-            </File>
-            <File Path="../../Rtl/rc_side/si5344_5345/Si5345-RevD-Out9-100Mhz-Registers.v">
+            <File Path="../../Rtl/ep_side/pcie_ep_engine.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -165,7 +151,7 @@
                     <Attr Name="CompileOrder" Val="19"/>
                 </FileInfo>
             </File>
-            <File Path="../../Rtl/rc_side/si5344_5345/count_rst_n.v">
+            <File Path="../../Rtl/ep_side/pcie_ep_image_dma.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -173,57 +159,9 @@
                     <Attr Name="CompileOrder" Val="20"/>
                 </FileInfo>
             </File>
-            <File Path="../../Rtl/rc_side/si5344_5345/debounce.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="21"/>
-                </FileInfo>
-            </File>
-            <File Path="../../Rtl/rc_side/si5344_5345/i2c_timing_ctrl.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="22"/>
-                </FileInfo>
-            </File>
-            <File Path="../../Rtl/rc_side/si5344_5345/si5344_5345.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="23"/>
-                </FileInfo>
-            </File>
-            <File Path="../../Rtl/rc_side/ubus_bridge/rc_ubus_bridge.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="24"/>
-                </FileInfo>
-            </File>
-            <File Path="../../Rtl/rc_side/ubus_bridge/ubus2tlp.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="25"/>
-                </FileInfo>
-            </File>
-            <File Path="../../Rtl/rc_side/ph2_pcie_rc_top.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="27"/>
-                </FileInfo>
-            </File>
         </Verilog>
         <ADC_FILE>
-            <File Path="constraints/ph2_pcie_case_rc.adc">
+            <File Path="constraints/ph2_pcie_case_ep.adc">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -233,7 +171,7 @@
             </File>
         </ADC_FILE>
         <SDC_FILE>
-            <File Path="constraints/ph2_pcie_case_rc.sdc">
+            <File Path="constraints/ph2_pcie_case_ep.sdc">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -243,20 +181,20 @@
             </File>
         </SDC_FILE>
         <IP_FILE>
-            <File Path="al_ip/ph2_pcie_rc_subsystem.ipc">
+            <File Path="al_ip/ph2_pcie_ep_subsystem.ipc">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="26"/>
+                    <Attr Name="CompileOrder" Val="1"/>
                 </FileInfo>
             </File>
-            <File Path="al_ip/pcie_pll_rc.ipc">
+            <File Path="al_ip/pcie_pll_ep.ipc">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="28"/>
+                    <Attr Name="CompileOrder" Val="18"/>
                 </FileInfo>
             </File>
         </IP_FILE>
@@ -268,8 +206,8 @@
         </FileSet>
     </FileSets>
     <TOP_MODULE>
-        <LABEL>ph2_pcie_rc_top</LABEL>
-        <MODULE>ph2_pcie_rc_top</MODULE>
+        <LABEL>ph2_pcie_ep_top</LABEL>
+        <MODULE>ph2_pcie_ep_top</MODULE>
         <CREATEINDEX>user</CREATEINDEX>
     </TOP_MODULE>
     <Property>
@@ -277,6 +215,9 @@
     <Device_Settings>
     </Device_Settings>
     <Configurations>
+        <FeatureRow>
+            <boot_mode>mspix4</boot_mode>
+        </FeatureRow>
     </Configurations>
     <Runs>
         <Run Name="syn_1" Type="Synthesis" ConstraintSet="constraint_1" Description="" Active="true">
@@ -290,9 +231,6 @@
                 <BitgenProperty::GeneralOption>
                     <compress>on</compress>
                 </BitgenProperty::GeneralOption>
-                <PlaceProperty>
-                    <fix_hold>on</fix_hold>
-                </PlaceProperty>
             </Strategy>
             <UserParams>
             </UserParams>

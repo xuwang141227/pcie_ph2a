@@ -11,8 +11,8 @@
 
 ## 2. 当前基础与约束
 
-- `ep_bar0_32k/README.md` 说明当前覆盖工程 BAR0 为 32 KiB，非预取 32 位 Memory BAR，设备 ID 为 `1edb:abcd`。现有 `tools/bar0_gui.py` 是 Ubuntu 下直接映射 BAR0 的读写界面，不提供 DMA 内存分配或中断等待。
-- `config/Clipboard_Screenshot-3.png` 的 Interrupt 页面选中 **Legacy**、PF0 **INTA**，MSI 和 MSI-X 未选中；`Design/Rtl/common/ph2_pcie_case_param.v` 也启用 Legacy。故本方案使用 Legacy INTA，不要求切换 IP 中断模式。
+- `README.md` 说明当前覆盖工程 BAR0 为 32 KiB，非预取 32 位 Memory BAR，设备 ID 为 `1edb:abcd`。现有 `tools/bar0_gui.py` 是 Ubuntu 下直接映射 BAR0 的读写界面，不提供 DMA 内存分配或中断等待。
+- `config/Clipboard_Screenshot-3.png` 的 Interrupt 页面选中 **Legacy**、PF0 **INTA**，MSI 和 MSI-X 未选中；`fpga/Design/Rtl/common/ph2_pcie_case_param.v` 也启用 Legacy。故本方案使用 Legacy INTA，不要求切换 IP 中断模式。
 - `config/Clipboard_Screenshot-2.png` 的 BAR0 显示 1 MiB，与分支 32 KiB overlay 的 `.ipc` 不一致。实施以实际已验证的 32 KiB overlay 和实际烧录工程为基准，不能照搬截图的 BAR0 容量。截图与 overlay 均配置 BAR2 为 64 位、非预取、1 MiB Memory BAR；最终以板卡实际枚举结果为准。
 - 现有 EP engine 主要处理主机发起的 BAR 事务和响应；此方案需要新增 EP 主动发起 Memory Write 的 DMA 逻辑，不能把现有 BAR 读写当作 DMA。仓库原厂驱动压缩包包含 DMA/事件相关代码，但与本方案硬件寄存器协议是否兼容尚未确认，不假设可直接使用。
 - 用户确认上位机实际 PCIe 链路为 **Gen2 ×4**。截图中的 Gen4 ×8、TL Clock 300 MHz 和最大 Payload 4096 是 IP/构建配置项，不代表实际链路协商结果；实施时读 `tl_cfg_current_link_speed`、`tl_cfg_negotiated_width`、`tl_cfg_max_payload_size` 并以运行时值拆分 DMA TLP。Gen2 ×4 对约 6.22 MB/s 的帧数据带宽充足，但仍须验证实际链路、TLP 流控和主机处理延迟。
@@ -141,9 +141,9 @@ Python 使用 Tkinter 窗口，建议 Pillow 处理 RGB888 和缩放；主线程
 
 ## 11. 当前实现与验证状态
 
-- 新增 `ep_bar0_32k/Design/Rtl/ep_side/pcie_ep_image_dma.v`：BAR2 寄存器接口、6 种 RGB888 图案、64 字节最大 payload 的 4DW Memory Write、4 KiB 边界拆分、双槽帧状态和错误/完成中断。START 后立即产生首帧，后续按 `FRAME_PERIOD_CYCLES` 计时；默认参数 300,000,000 个 `tl_clk_user` 周期，须确认实际时钟为 300 MHz 才对应 1 秒。
+- 新增 `fpga/Design/Rtl/ep_side/pcie_ep_image_dma.v`：BAR2 寄存器接口、6 种 RGB888 图案、64 字节最大 payload 的 4DW Memory Write、4 KiB 边界拆分、双槽帧状态和错误/完成中断。START 后立即产生首帧，后续按 `FRAME_PERIOD_CYCLES` 计时；默认参数 300,000,000 个 `tl_clk_user` 周期，须确认实际时钟为 300 MHz 才对应 1 秒。
 - EP 顶层通过 TX 仲裁器连接原 BAR engine 与新 DMA engine，并在非仲裁所有者一侧施加 wait；Legacy PF0 INTA pending 由 DMA 中断状态和使能共同驱动，同时保留原 demo 外部触发脉冲。
 - 新增 `driver/pcie_image_drv.c` / `pcie_image.h`：绑定 `1edb:abcd`、检查 BAR2 ABI、分配两个 coherent DMA buffer、提供 `mmap/poll/ioctl` 和 Legacy IRQ。停止超时时清除 bus mastering 并隔离 buffer，避免释放仍可能被设备访问的内存；该保护不等于验证了设备已被物理隔离。
 - 新增 `tools/pcie_image_gui.py`：Tkinter 开始/停止、图案选择、画面显示和日志；须按 `tools/requirements.txt` 安装 Pillow。日志显示帧序号、图案、长度、协商链路及丢帧计数，不输出至物理串口。
-- 已通过 `ep_bar0_32k/Design/Sim/tb/pcie_ep_image_dma_tb.v` 定向 RTL 仿真，覆盖 BAR2 读写、Memory Write 头/数据、4 KiB 拆包、TX wait 保持、帧元数据/W1C 中断、图案参考像素、双缓冲槽地址轮转，以及 STOP 等待在途帧完成。已通过现有 BAR0 回归、EP 顶层/包装器语法检查和 Python 语法/ioctl ABI 大小检查。
+- 已通过 `fpga/Design/Sim/tb/pcie_ep_image_dma_tb.v` 定向 RTL 仿真，覆盖 BAR2 读写、Memory Write 头/数据、4 KiB 拆包、TX wait 保持、帧元数据/W1C 中断、图案参考像素、双缓冲槽地址轮转，以及 STOP 等待在途帧完成。已通过现有 BAR0 回归、EP 顶层/包装器语法检查和 Python 语法/ioctl ABI 大小检查。
 - 当前未验证：完整端到端 PCIe 仿真、安路综合/时序、Linux 内核模块编译、实际 GUI 与板卡联调、上板 1080p 图像逐字节比对、DMA/INTA 顺序和长时间稳定性。缺少目标内核 headers 与厂商综合/IP 仿真环境时，须将其作为明确的验证阻塞项；不得据此宣称功能已完成。
