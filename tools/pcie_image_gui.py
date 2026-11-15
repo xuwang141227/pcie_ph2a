@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Display 1080p frames received by the PH2A PCIe image DMA driver."""
 
+from __future__ import annotations
+
 import ctypes
 import errno
 import fcntl

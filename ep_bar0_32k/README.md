@@ -53,10 +53,11 @@ vvp /tmp/pcie_ep_image_dma_tb
 ```
 
 The Linux driver is in `driver/`; build it against the headers for the target
-host kernel with `make -C driver`. Install `tools/requirements.txt` in a Python
-environment that provides Tkinter, then run `python3 tools/pcie_image_gui.py`
-with permission to open `/dev/pcie_image*`. Bind the new driver only after
-unbinding any existing driver for the device.
+host kernel with `make -C driver`. Ubuntu 20.04.6's Python 3.8 is supported;
+install `tools/requirements.txt` in a Python environment that provides
+Tkinter, then run `python3 tools/pcie_image_gui.py` with permission to open
+`/dev/pcie_image*`. Bind the new driver only after unbinding any existing
+driver for the device.
 
 This is an implementation draft, not a board-validated release. The driver
 build, vendor synthesis/timing, host DMA visibility ordering, actual Legacy
