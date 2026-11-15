@@ -143,12 +143,20 @@
                     <Attr Name="CompileOrder" Val="17"/>
                 </FileInfo>
             </File>
-            <File Path="../../Rtl/ep_side/pcie_ep_engine.v">
+            <File Path="../../../../../ep_bar0_32k/Design/Rtl/ep_side/pcie_ep_engine.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
                     <Attr Name="CompileOrder" Val="19"/>
+                </FileInfo>
+            </File>
+            <File Path="../../../../../ep_bar0_32k/Design/Rtl/ep_side/pcie_ep_image_dma.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="20"/>
                 </FileInfo>
             </File>
         </Verilog>
@@ -173,7 +181,7 @@
             </File>
         </SDC_FILE>
         <IP_FILE>
-            <File Path="al_ip/ph2_pcie_ep_subsystem.ipc">
+            <File Path="../../../../../ep_bar0_32k/Design/Prj/case_ep/al_ip/ph2_pcie_ep_subsystem.ipc">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>

@@ -112,6 +112,56 @@
     wire                tl_tx_wait                              ;
     wire  [95:0]        tl_tx_credits                           ;
 
+    wire  [511:0]       ep_tx_data                               ;
+    wire                ep_tx_eop                                ;
+    wire  [7:0]         ep_tx_err                                ;
+    wire                ep_tx_sop                                ;
+    wire                ep_tx_stream                             ;
+    wire  [15:0]        ep_tx_valid                              ;
+    wire  [511:0]       image_tx_data                            ;
+    wire                image_tx_eop                             ;
+    wire  [7:0]         image_tx_err                             ;
+    wire                image_tx_sop                             ;
+    wire                image_tx_stream                          ;
+    wire  [15:0]        image_tx_valid                           ;
+    wire                image_int_pending                        ;
+    reg                 tx_mux_locked                            ;
+    reg                 tx_mux_owner_dma                         ;
+    reg                 tx_mux_prefer_dma                        ;
+    wire                tx_mux_dma;
+    wire                tx_mux_valid;
+    wire                tx_mux_eop;
+
+    assign tx_mux_dma = tx_mux_locked ? tx_mux_owner_dma :
+        ((|image_tx_valid) && (!(|ep_tx_valid) || tx_mux_prefer_dma));
+    assign tx_mux_valid = tx_mux_dma ? (|image_tx_valid) : (|ep_tx_valid);
+    assign tx_mux_eop = tx_mux_dma ? image_tx_eop : ep_tx_eop;
+    assign tl_tx_data = tx_mux_dma ? image_tx_data : ep_tx_data;
+    assign tl_tx_eop = tx_mux_dma ? image_tx_eop : ep_tx_eop;
+    assign tl_tx_err = tx_mux_dma ? image_tx_err : ep_tx_err;
+    assign tl_tx_sop = tx_mux_dma ? image_tx_sop : ep_tx_sop;
+    assign tl_tx_stream = tx_mux_dma ? image_tx_stream : ep_tx_stream;
+    assign tl_tx_valid = tx_mux_dma ? image_tx_valid : ep_tx_valid;
+
+    always @(posedge tl_clk_user or posedge tl_rst_user) begin
+        if (tl_rst_user) begin
+            tx_mux_locked <= 1'b0;
+            tx_mux_owner_dma <= 1'b0;
+            tx_mux_prefer_dma <= 1'b1;
+        end else if (tx_mux_locked) begin
+            if (tx_mux_valid && tx_mux_eop && !tl_tx_wait) begin
+                tx_mux_locked <= 1'b0;
+                tx_mux_prefer_dma <= !tx_mux_owner_dma;
+            end
+        end else if (tx_mux_valid) begin
+            if (!tx_mux_eop || tl_tx_wait) begin
+                tx_mux_locked <= 1'b1;
+                tx_mux_owner_dma <= tx_mux_dma;
+            end else
+                tx_mux_prefer_dma <= !tx_mux_dma;
+        end
+    end
+
    `ifdef PH2_PCIE_LEGACY_INT_ENABLE
     wire  [3:0]         tl_int_status                           ;
     wire  [3:0]         tl_int_pincontrol                       ;
@@ -396,15 +446,40 @@ pcie_ep_engine u_pcie_ep_engine(
     .tl_int_msix_trigger                     (4'b0                                    ),
 `endif
     // TX interface
-    .tl_tx_data                              (tl_tx_data                              ),
-    .tl_tx_eop                               (tl_tx_eop                               ),
-    .tl_tx_err                               (tl_tx_err                               ),
-    .tl_tx_sop                               (tl_tx_sop                               ),
-    .tl_tx_stream                            (tl_tx_stream                            ),
-    .tl_tx_valid                             (tl_tx_valid                             ),
-    .tl_tx_wait                              (tl_tx_wait                              ),
+    .tl_tx_data                              (ep_tx_data                              ),
+    .tl_tx_eop                               (ep_tx_eop                               ),
+    .tl_tx_err                               (ep_tx_err                               ),
+    .tl_tx_sop                               (ep_tx_sop                               ),
+    .tl_tx_stream                            (ep_tx_stream                            ),
+    .tl_tx_valid                             (ep_tx_valid                             ),
+    .tl_tx_wait                              (tl_tx_wait || tx_mux_dma                ),
     .tl_tx_credits                           (tl_tx_credits                           ),
     .tl_cfg_busdev                           (tl_cfg_busdev                           )
+);
+
+pcie_ep_image_dma u_pcie_ep_image_dma(
+    .tl_clk_user                             (tl_clk_user                             ),
+    .tl_rst_user                             (tl_rst_user                             ),
+    .tl_rx_bardec                            (tl_rx_bardec                            ),
+    .tl_rx_data                              (tl_rx_data                              ),
+    .tl_rx_sop                               (tl_rx_sop                               ),
+    .tl_rx_eop                               (tl_rx_eop                               ),
+    .tl_rx_valid                             (tl_rx_valid                             ),
+    .tl_cfg_busdev                           (tl_cfg_busdev                           ),
+    .tl_cfg_pfregs_cmd                       (tl_cfg_pfregs_cmd                       ),
+    .tl_cfg_current_link_speed               (tl_cfg_current_link_speed               ),
+    .tl_cfg_negotiated_width                 (tl_cfg_negotiated_width                 ),
+    .tl_cfg_max_payload_size                 (tl_cfg_max_payload_size                 ),
+    .pl_link_up                              (pl_link_up                              ),
+    .tl_tx_credits                           (tl_tx_credits                           ),
+    .tl_tx_wait                              (tl_tx_wait || !tx_mux_dma               ),
+    .tl_tx_data                              (image_tx_data                           ),
+    .tl_tx_eop                               (image_tx_eop                            ),
+    .tl_tx_err                               (image_tx_err                            ),
+    .tl_tx_sop                               (image_tx_sop                            ),
+    .tl_tx_stream                            (image_tx_stream                         ),
+    .tl_tx_valid                             (image_tx_valid                          ),
+    .irq_pending                             (image_int_pending                      )
 );
 
 pcie_ep_int_handle u_pcie_ep_int_handle(
@@ -416,6 +491,7 @@ pcie_ep_int_handle u_pcie_ep_int_handle(
    ,.tl_int_status                           (tl_int_status                           )
    ,.tl_int_pincontrol                       (tl_int_pincontrol                       )
    ,.tl_int_pinstate                         (tl_int_pinstate                         )
+   ,.image_int_pending                       (image_int_pending                       )
 `endif
 `ifdef PH2_PCIE_MSI_INT_ENABLE
    ,.tl_int_status                           (tl_int_status                           )

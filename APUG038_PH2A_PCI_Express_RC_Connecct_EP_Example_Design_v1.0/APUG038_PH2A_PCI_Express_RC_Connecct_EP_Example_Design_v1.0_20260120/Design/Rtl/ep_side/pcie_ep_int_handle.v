@@ -23,6 +23,7 @@ module  pcie_ep_int_handle(
     ,input       wire                tl_rst_user                
 
     ,input       wire                user_int_trigger       
+    ,input       wire                image_int_pending
 
 `ifdef PH2_PCIE_LEGACY_INT_ENABLE  
     ,output      reg   [3:0]         tl_int_status
@@ -70,26 +71,17 @@ module  pcie_ep_int_handle(
 // ====================================================================
 `ifdef PH2_PCIE_LEGACY_INT_ENABLE
 
-      reg   [3:0]   tl_int_pincontrol_ff;      
-        
-      always@(posedge tl_clk_user or posedge tl_rst_user) begin 
-            if(tl_rst_user) 
-                tl_int_pincontrol_ff <= 4'b1;      
-            else if(!user_int_trigger_ff[1] & user_int_trigger_ff[0]) // posedge detect
-                tl_int_pincontrol_ff <= {tl_int_pincontrol_ff[2:0],tl_int_pincontrol_ff[3]};      
-      end
-
       always@(posedge tl_clk_user or posedge tl_rst_user) begin 
             if(tl_rst_user) begin
                 tl_int_pincontrol <= 4'b0;      
                 tl_int_status     <= 4'b0;
-            end else if(!user_int_trigger_ff[1] & user_int_trigger_ff[0]) begin // posedge detect
-                tl_int_pincontrol <= tl_int_pincontrol_ff;      
-                tl_int_status     <= 4'b1;
-                $display("tb info : ep send legacy int to rc");
-            end else begin 
-                tl_int_pincontrol <= 4'b0;      
-                tl_int_status     <= 4'b0;
+            end else begin
+                tl_int_pincontrol <= {3'b0, image_int_pending |
+                                      (!user_int_trigger_ff[1] &
+                                       user_int_trigger_ff[0])};
+                tl_int_status <= {3'b0, image_int_pending |
+                                  (!user_int_trigger_ff[1] &
+                                   user_int_trigger_ff[0])};
             end
       end
 
