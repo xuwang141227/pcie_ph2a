@@ -16,11 +16,11 @@
 //`define PH2_PCIE_CASE_PARAM___H
 
     // rc project redef 
-    `define     RC_TL_CLK_REQ               9'd300
+    `define     RC_TL_CLK_REQ               9'd80
     
     
     // ep project  redef 
-    `define     EP_TL_CLK_REQ               9'd300
+    `define     EP_TL_CLK_REQ               9'd80
 
     // Interrupt Sel, only enable one of them
     `define   PH2_PCIE_LEGACY_INT_ENABLE

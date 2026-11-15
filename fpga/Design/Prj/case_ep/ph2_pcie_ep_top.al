@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Last modified by TangDynasty Release_2026.2 -->
-<Project Version="3" Minor="2" Path=".">
+<Project Version="3" Minor="2" Path="C:/Users/ithelp/Desktop/pcie_ph2a-pcie-image-dma/fpga/Design/Prj/case_ep">
     <Project_Created_Time></Project_Created_Time>
-    <TD_Version>6.2.3.210850</TD_Version>
+    <TD_Version>6.2.198412</TD_Version>
     <UCode>10101000</UCode>
     <Name>ph2_pcie_ep_top</Name>
     <HardWare>
@@ -222,6 +221,9 @@
     <Runs>
         <Run Name="syn_1" Type="Synthesis" ConstraintSet="constraint_1" Description="" Active="true">
             <Strategy Name="Default_Synthesis_Strategy">
+                <GateProperty>
+                    <map_strategy>3</map_strategy>
+                </GateProperty>
             </Strategy>
             <UserParams>
             </UserParams>
@@ -231,6 +233,11 @@
                 <BitgenProperty::GeneralOption>
                     <compress>on</compress>
                 </BitgenProperty::GeneralOption>
+                <PlaceProperty>
+                    <logic_level_opt>on</logic_level_opt>
+                    <opt_timing>high</opt_timing>
+                    <post_place_opt>high</post_place_opt>
+                </PlaceProperty>
             </Strategy>
             <UserParams>
             </UserParams>

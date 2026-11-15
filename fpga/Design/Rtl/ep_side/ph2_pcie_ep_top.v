@@ -412,17 +412,17 @@ ph2_pcie_ep_subsystem u_ph2_pcie_ep_subsystem(
     .phy0_master_apb4_pwrite_in              (hxt_phy0_pwrite                         ),
     .phy0_master_apb4_prdata_out             (hxt_phy0_prdata                         ),
     .phy0_master_apb4_pready_out             (hxt_phy0_pready                         ),
-    .phy0_master_apb4_pslverr_out            (hxt_phy0_pslverr                        ),
-    .phy1_master_apb4_paddr_in               (hxt_phy1_paddr                          ),
-    .phy1_master_apb4_penable_in             (hxt_phy1_penable                        ),
-    .phy1_master_apb4_pprot_in               (hxt_phy1_pprot                          ),
-    .phy1_master_apb4_psel_in                (hxt_phy1_psel                           ),
-    .phy1_master_apb4_pstrobe_in             (hxt_phy1_pstrb                          ),
-    .phy1_master_apb4_pwdata_in              (hxt_phy1_pwdata                         ),
-    .phy1_master_apb4_pwrite_in              (hxt_phy1_pwrite                         ),
-    .phy1_master_apb4_prdata_out             (hxt_phy1_prdata                         ),
-    .phy1_master_apb4_pready_out             (hxt_phy1_pready                         ),
-    .phy1_master_apb4_pslverr_out            (hxt_phy1_pslverr                        )
+    .phy0_master_apb4_pslverr_out            (hxt_phy0_pslverr                        )
+//    .phy1_master_apb4_paddr_in               (hxt_phy1_paddr                          ),
+//    .phy1_master_apb4_penable_in             (hxt_phy1_penable                        ),
+//    .phy1_master_apb4_pprot_in               (hxt_phy1_pprot                          ),
+//    .phy1_master_apb4_psel_in                (hxt_phy1_psel                           ),
+//    .phy1_master_apb4_pstrobe_in             (hxt_phy1_pstrb                          ),
+//    .phy1_master_apb4_pwdata_in              (hxt_phy1_pwdata                         ),
+//    .phy1_master_apb4_pwrite_in              (hxt_phy1_pwrite                         ),
+//    .phy1_master_apb4_prdata_out             (hxt_phy1_prdata                         ),
+//    .phy1_master_apb4_pready_out             (hxt_phy1_pready                         ),
+//    .phy1_master_apb4_pslverr_out            (hxt_phy1_pslverr                        )
 );
 
 pcie_ep_engine u_pcie_ep_engine(
