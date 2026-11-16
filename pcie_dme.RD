@@ -13,9 +13,9 @@
 
 - `README.md` 说明当前覆盖工程 BAR0 为 32 KiB，非预取 32 位 Memory BAR，设备 ID 为 `1edb:abcd`。现有 `tools/bar0_gui.py` 是 Ubuntu 下直接映射 BAR0 的读写界面，不提供 DMA 内存分配或中断等待。
 - `config/Clipboard_Screenshot-3.png` 的 Interrupt 页面选中 **Legacy**、PF0 **INTA**，MSI 和 MSI-X 未选中；`fpga/Design/Rtl/common/ph2_pcie_case_param.v` 也启用 Legacy。故本方案使用 Legacy INTA，不要求切换 IP 中断模式。
-- `config/Clipboard_Screenshot-2.png` 的 BAR0 显示 1 MiB，与分支 32 KiB overlay 的 `.ipc` 不一致。实施以实际已验证的 32 KiB overlay 和实际烧录工程为基准，不能照搬截图的 BAR0 容量。截图与 overlay 均配置 BAR2 为 64 位、非预取、1 MiB Memory BAR；最终以板卡实际枚举结果为准。
+- `config/PF.png` 显示 BAR0 为 32 KiB、BAR2 为 1 MiB 32-bit 非预取 Memory BAR，PF0 class code 为 `0x078000`；`config/Clipboard_Screenshot-5.png` 显示 Gen2 ×4、80 MHz。当前 `.ipc` 和生成的 PCIe wrapper 按这些配置同步；最终 BAR 资源仍以板卡实际枚举结果为准。
 - 现有 EP engine 主要处理主机发起的 BAR 事务和响应；此方案需要新增 EP 主动发起 Memory Write 的 DMA 逻辑，不能把现有 BAR 读写当作 DMA。仓库原厂驱动压缩包包含 DMA/事件相关代码，但与本方案硬件寄存器协议是否兼容尚未确认，不假设可直接使用。
-- 用户确认上位机实际 PCIe 链路为 **Gen2 ×4**，并已将 `tl_clk_user` 配置为 **80 MHz**。PCIe 链路速率与 FPGA 用户时钟频率是独立配置；代码使用 80,000,000 个用户时钟周期作为 1 秒帧节拍。DMA 仍读取 `tl_cfg_current_link_speed`、`tl_cfg_negotiated_width`、`tl_cfg_max_payload_size` 并以运行时值拆分 TLP。Gen2 ×4 对约 6.22 MB/s 的帧数据带宽充足，但仍须验证实际链路、TLP 流控和主机处理延迟。
+- PCIe IP 按 **Gen2 ×4** 配置，`tl_clk_user` 为 **80 MHz**。PCIe 链路速率与 FPGA 用户时钟频率是独立配置；代码使用 80,000,000 个用户时钟周期作为 1 秒帧节拍。DMA 仍读取 `tl_cfg_current_link_speed`、`tl_cfg_negotiated_width`、`tl_cfg_max_payload_size` 并以运行时值拆分 TLP。Gen2 ×4 对约 6.22 MB/s 的帧数据带宽充足，但仍须验证实际链路、TLP 流控和主机处理延迟。
 - UG1112 1.2（2026.09）确认 EP 用户 TX 是 512-bit 接口，TLP Header Byte0 对应 `tl_tx_data[511:504]`，DW 内字节先高位后低位。`tl_tx_valid` 非末拍必须全 1、末拍标明有效 DW；`tl_tx_wait` 可在报文任意位置拉高，拉高期间所有发送输入须保持稳定。不得等 `tl_tx_wait==0` 后才开始新报文：`tl_tx_sop` 发起报文、`tl_tx_wait` 对传输施加反压。posted header/data credit 分别见 `tl_tx_credits[31:0]`；credit 更新有两个 `tl_clk_user` 周期延迟，应按手册信用规则和 IP 行为实现，不能只依赖 wait。
 - UG1112 2.5.1 确认当前 Legacy INTA 配置使用 PF0：`tl_int_status[0]` 高有效表示 PF0 请求中断，`tl_int_pincontrol[0]` 高有效表示控制 INTA# 线路；`tl_int_pinstate[0]` 是观察 Root Port/Switch 线路状态的输出，不是 EP 中断完成确认。请求应保持到 Host 处理后清除，并在撤销前按截图/手册定义及平台观察验证。
 
@@ -131,9 +131,8 @@ Python 使用 Tkinter 窗口，建议 Pillow 处理 RGB888 和缩放；主线程
 
 ## 10. 已知实施基线与验证边界
 
-- 上位机 PCIe 链路按用户确认的 Gen2 ×4 设计，Linux 驱动和 Python UI 由本项目新增；工具以仓库已有 Ubuntu GUI 为平台线索。驱动构建需匹配实际运行内核的 headers，实施时通过标准内核接口处理版本差异。
-- 截图 IP 配置是 Gen4 ×8，而上位机实际链路是 Gen2 ×4。两者不矛盾：前者是 FPGA IP/设计配置能力，后者是当前上板链路。必须记录训练后的实际速度和宽度，若不为 Gen2 ×4 或链路不稳定则先处理链路问题。
-- 当前 overlay `.ipc` 可见 BAR0 32 KiB 和 BAR2 64 位 1 MiB 配置；截图也列出 BAR2，但真实运行 BAR 仍须由主机枚举确认。BAR2 是否可分配寄存器窗口以实际 BAR 空间和 bitstream 一致性为准；若 BAR2 当前被已有功能使用，实施时调整寄存器映射并保留该功能。
+- PCIe IP 按 Gen2 ×4 配置，Linux 驱动和 Python UI 由本项目新增；工具以仓库已有 Ubuntu GUI 为平台线索。驱动构建需匹配实际运行内核的 headers，实施时通过标准内核接口处理版本差异。
+- 当前配置为 BAR0 32 KiB 32-bit Memory、BAR2 1 MiB 32-bit 非预取 Memory，BAR2 仍通过 PCI resource index 2 访问；BAR2 的 32-bit 属性不要求驱动改用其他 BAR index。PF0 class code 为 `0x078000`，不影响驱动按 `1edb:abcd` 匹配。真实运行 BAR、class code 和训练链路仍须由主机枚举确认，并检查其与 bitstream 一致性。
 - Host DMA 分配、驱动安装和 UI 是本方案必做工作，不作为要求用户另行提供的功能。硬件 IP 行为通过 UG1112、已有 RTL、可用仿真/测试和板上数据逐步验证；若器件配置或工具模型缺失，则明确标注受限项，不把它们作为已验证事实。
 - 本版固定 RGB888、六种图案、双缓冲；若连续一致性 DMA 缓冲无法分配，当前版本报告错误，不静默降级到 SG。是否另行设计 SG 为后续优化事项，不影响本版协议正确性。
 

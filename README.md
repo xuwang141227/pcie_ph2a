@@ -20,7 +20,10 @@
 ## FPGA 工程
 
 在 Tang Dynasty 中打开上述 `.al` 文件，使用本目录下的 PCIe IP 配置：
-BAR0 为 32 KiB，BAR2 用于 DMA 控制，PF0 使用 Legacy INTA。现有 IP
+Gen2 ×4，`tl_clk_user` 为 80 MHz；BAR0 为 32 KiB 32-bit Memory BAR，
+BAR2 为 1 MiB 32-bit 非预取 Memory BAR（DMA 控制），PF0 class code 为
+`0x078000` 并使用 Legacy INTA。驱动通过 PCI BAR index 2 访问 BAR2；
+BAR2 是 32 位 BAR 不改变该索引。现有 IP
 生成文件中部分辅助文件来自原厂示例，不保证与 32 KiB 覆盖配置一致；
 **构建前应根据本分支 `.ipc` 重新生成 PCIe IP 及其所有输出文件**。
 PLL 的 `tl_clk_user` 输出配置为 80 MHz，EP 顶层按 `EP_TL_CLK_REQ`
