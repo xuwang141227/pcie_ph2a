@@ -173,8 +173,16 @@ module pcie_ep_image_dma_tb;
             dut.pixel_component(3'd5, 0, 0, 0) != 8'd255 ||
             dut.pixel_component(3'd5, 960, 0, 1) != 8'd255 ||
             dut.pixel_component(3'd5, 0, 540, 2) != 8'd255 ||
-            dut.pixel_component(3'd5, 960, 540, 0) != 8'd255) begin
-            $display("FAIL: pattern reference pixel mismatch");
+            dut.pixel_component(3'd5, 960, 540, 0) != 8'd255 ||
+            dut.pixel_dword(0, 0, 0, 0) !== 32'hffff_ffff ||
+            dut.pixel_dword(240, 0, 0, 0) !== 32'hffff_00ff ||
+            dut.pixel_dword(1919, 0, 0, 1) !== 32'hffff_ff00 ||
+            dut.pixel_dword(1919, 0, 2, 0) !== 32'h00ff_ffff) begin
+            $display("FAIL: pattern reference pixel mismatch: %h %h %h %h",
+                     dut.pixel_dword(0, 0, 0, 0),
+                     dut.pixel_dword(240, 0, 0, 0),
+                     dut.pixel_dword(1919, 0, 0, 1),
+                     dut.pixel_dword(1919, 0, 2, 0));
             $fatal(1);
         end
         write_bar2(32'h020, 32'h1234_5ff0);
