@@ -23,9 +23,9 @@
 BAR0 为 32 KiB，BAR2 用于 DMA 控制，PF0 使用 Legacy INTA。现有 IP
 生成文件中部分辅助文件来自原厂示例，不保证与 32 KiB 覆盖配置一致；
 **构建前应根据本分支 `.ipc` 重新生成 PCIe IP 及其所有输出文件**。
-PLL 保留原厂 EP 配置。实际 PCIe 链路按用户环境为 Gen2 ×4；
-`FRAME_PERIOD_CYCLES` 默认为 300,000,000，须确认 `tl_clk_user` 为
-300 MHz 才对应 1 fps。
+PLL 的 `tl_clk_user` 输出配置为 80 MHz，EP 顶层按 `EP_TL_CLK_REQ`
+设置帧周期；80,000,000 个时钟周期对应 1 fps。实际 PCIe 链路按用户环境为
+Gen2 ×4，链路速率与用户时钟频率是独立配置。
 
 ## 仿真
 

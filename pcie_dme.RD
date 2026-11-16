@@ -15,7 +15,7 @@
 - `config/Clipboard_Screenshot-3.png` 的 Interrupt 页面选中 **Legacy**、PF0 **INTA**，MSI 和 MSI-X 未选中；`fpga/Design/Rtl/common/ph2_pcie_case_param.v` 也启用 Legacy。故本方案使用 Legacy INTA，不要求切换 IP 中断模式。
 - `config/Clipboard_Screenshot-2.png` 的 BAR0 显示 1 MiB，与分支 32 KiB overlay 的 `.ipc` 不一致。实施以实际已验证的 32 KiB overlay 和实际烧录工程为基准，不能照搬截图的 BAR0 容量。截图与 overlay 均配置 BAR2 为 64 位、非预取、1 MiB Memory BAR；最终以板卡实际枚举结果为准。
 - 现有 EP engine 主要处理主机发起的 BAR 事务和响应；此方案需要新增 EP 主动发起 Memory Write 的 DMA 逻辑，不能把现有 BAR 读写当作 DMA。仓库原厂驱动压缩包包含 DMA/事件相关代码，但与本方案硬件寄存器协议是否兼容尚未确认，不假设可直接使用。
-- 用户确认上位机实际 PCIe 链路为 **Gen2 ×4**。截图中的 Gen4 ×8、TL Clock 300 MHz 和最大 Payload 4096 是 IP/构建配置项，不代表实际链路协商结果；实施时读 `tl_cfg_current_link_speed`、`tl_cfg_negotiated_width`、`tl_cfg_max_payload_size` 并以运行时值拆分 DMA TLP。Gen2 ×4 对约 6.22 MB/s 的帧数据带宽充足，但仍须验证实际链路、TLP 流控和主机处理延迟。
+- 用户确认上位机实际 PCIe 链路为 **Gen2 ×4**，并已将 `tl_clk_user` 配置为 **80 MHz**。PCIe 链路速率与 FPGA 用户时钟频率是独立配置；代码使用 80,000,000 个用户时钟周期作为 1 秒帧节拍。DMA 仍读取 `tl_cfg_current_link_speed`、`tl_cfg_negotiated_width`、`tl_cfg_max_payload_size` 并以运行时值拆分 TLP。Gen2 ×4 对约 6.22 MB/s 的帧数据带宽充足，但仍须验证实际链路、TLP 流控和主机处理延迟。
 - UG1112 1.2（2026.09）确认 EP 用户 TX 是 512-bit 接口，TLP Header Byte0 对应 `tl_tx_data[511:504]`，DW 内字节先高位后低位。`tl_tx_valid` 非末拍必须全 1、末拍标明有效 DW；`tl_tx_wait` 可在报文任意位置拉高，拉高期间所有发送输入须保持稳定。不得等 `tl_tx_wait==0` 后才开始新报文：`tl_tx_sop` 发起报文、`tl_tx_wait` 对传输施加反压。posted header/data credit 分别见 `tl_tx_credits[31:0]`；credit 更新有两个 `tl_clk_user` 周期延迟，应按手册信用规则和 IP 行为实现，不能只依赖 wait。
 - UG1112 2.5.1 确认当前 Legacy INTA 配置使用 PF0：`tl_int_status[0]` 高有效表示 PF0 请求中断，`tl_int_pincontrol[0]` 高有效表示控制 INTA# 线路；`tl_int_pinstate[0]` 是观察 Root Port/Switch 线路状态的输出，不是 EP 中断完成确认。请求应保持到 Host 处理后清除，并在撤销前按截图/手册定义及平台观察验证。
 
@@ -65,7 +65,7 @@ PH2A EP：BAR2 寄存器 + DMA 发送仲裁 + 图案发生器
 
 ### 5.2 发送与节拍
 
-- START 生效后立即开始第一帧，此后以设备时钟每 1 秒产生采集节拍；当前帧尚未结束或无空槽时计一次丢帧并跳过该节拍，不补发。设备时钟频率以实际配置为准，不能直接假设截图的 300 MHz 一定有效。
+- START 生效后立即开始第一帧，此后以 80 MHz `tl_clk_user` 每 80,000,000 周期产生 1 秒采集节拍；当前帧尚未结束或无空槽时计一次丢帧并跳过该节拍，不补发。若修改用户时钟，EP 顶层的帧周期随 `EP_TL_CLK_REQ` 更新。
 - 帧开始时锁存图案 ID 和帧序号，生成顺序像素并打包为字节流。发送逻辑按有效握手推进，`tl_tx_wait` 时保持相关输出稳定，FIFO 满时反压发生器。
 - DMA 写地址和长度要合法、4 字节对齐、处于已授权帧缓冲范围内。每个 TLP 的 payload 不超过实时协商 MPS，且不跨越 4 KiB 边界；首尾字节使能、3DW/4DW 地址格式、字节顺序和 TX 接口位序按 UG1112 2.2.1–2.2.3 实现。使用 4DW Memory Write 支持 DMA API 返回的 64 位地址。遇到任意地址或长度异常时停止并报告，不得越界发送。
 - 当前 RTL 每个 Memory Write payload 最多 64 字节（低于 PCIe 最小 MPS），并在 4 KiB 边界处分包；不是按运行时 MPS 动态产生更大 payload。TX 仲裁器在 DMA Memory Write 和原有 BAR Read Completion 等业务间仲裁，TLP 不可中途切换，并在未获仲裁期间向非所有者施加 wait。仅在 UG1112 定义的有效传输周期推进 TLP 状态。`tl_tx_credits` 用于 posted/non-posted 发送节流，并对 posted credit 更新留两周期保护；最终需用厂商 IP 仿真模型及上板确认 credit 位域和实际传输行为。`tl_tx_stream` 维持关闭。
@@ -141,7 +141,7 @@ Python 使用 Tkinter 窗口，建议 Pillow 处理 RGB888 和缩放；主线程
 
 ## 11. 当前实现与验证状态
 
-- 新增 `fpga/Design/Rtl/ep_side/pcie_ep_image_dma.v`：BAR2 寄存器接口、6 种 RGB888 图案、64 字节最大 payload 的 4DW Memory Write、4 KiB 边界拆分、双槽帧状态和错误/完成中断。START 后立即产生首帧，后续按 `FRAME_PERIOD_CYCLES` 计时；默认参数 300,000,000 个 `tl_clk_user` 周期，须确认实际时钟为 300 MHz 才对应 1 秒。
+- 新增 `fpga/Design/Rtl/ep_side/pcie_ep_image_dma.v`：BAR2 寄存器接口、6 种 RGB888 图案、64 字节最大 payload 的 4DW Memory Write、4 KiB 边界拆分、双槽帧状态和错误/完成中断。START 后立即产生首帧，后续按 `FRAME_PERIOD_CYCLES` 计时；当前默认 80,000,000 个 `tl_clk_user` 周期，对应 80 MHz 下 1 fps。图像生成使用递增的 x/y/分量计数器，不再从每个 DWORD 的字节偏移执行宽位除法/取模。
 - EP 顶层通过 TX 仲裁器连接原 BAR engine 与新 DMA engine，并在非仲裁所有者一侧施加 wait；Legacy PF0 INTA pending 由 DMA 中断状态和使能共同驱动，同时保留原 demo 外部触发脉冲。
 - 新增 `driver/pcie_image_drv.c` / `pcie_image.h`：绑定 `1edb:abcd`、检查 BAR2 ABI、分配两个 coherent DMA buffer、提供 `mmap/poll/ioctl` 和 Legacy IRQ。停止超时时清除 bus mastering 并隔离 buffer，避免释放仍可能被设备访问的内存；该保护不等于验证了设备已被物理隔离。
 - 新增 `tools/pcie_image_gui.py`：Tkinter 开始/停止、图案选择、画面显示和日志；须按 `tools/requirements.txt` 安装 Pillow。日志显示帧序号、图案、长度、协商链路及丢帧计数，不输出至物理串口。

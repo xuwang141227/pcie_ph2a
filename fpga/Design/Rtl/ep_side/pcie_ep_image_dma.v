@@ -3,7 +3,7 @@
 
 module pcie_ep_image_dma #(
     parameter integer FRAME_BYTES = 6220800,
-    parameter integer FRAME_PERIOD_CYCLES = 300000000
+    parameter integer FRAME_PERIOD_CYCLES = 80000000
 ) (
     input wire tl_clk_user,
     input wire tl_rst_user,
@@ -55,6 +55,8 @@ module pcie_ep_image_dma #(
     localparam [31:0] DMA_CONTROL_STOP = 32'h2;
     localparam [31:0] DMA_REARM0 = 32'h100;
     localparam [31:0] DMA_REARM1 = 32'h200;
+    localparam integer FRAME_TIMER_WIDTH =
+        FRAME_PERIOD_CYCLES > 1 ? $clog2(FRAME_PERIOD_CYCLES) : 1;
 
     reg [63:0] buffer0_address;
     reg [63:0] buffer1_address;
@@ -80,9 +82,12 @@ module pcie_ep_image_dma #(
     reg next_slot;
     reg [2:0] current_pattern;
     reg [31:0] byte_offset;
-    reg [31:0] frame_timer;
+    reg [FRAME_TIMER_WIDTH-1:0] frame_timer;
     reg [31:0] frame_sequence;
     reg [63:0] current_dma_address;
+    reg [10:0] pixel_x;
+    reg [10:0] pixel_y;
+    reg [1:0] pixel_component_offset;
     reg tx_pending;
     reg tx_is_dma;
     reg tx_phase;
@@ -136,6 +141,10 @@ module pcie_ep_image_dma #(
         ? frame_bytes_remaining : bytes_to_4k_boundary;
     wire [31:0] packet_bytes =
         packet_bytes_remaining < 32'd64 ? packet_bytes_remaining : 32'd64;
+    wire [1:0] pixel_x_step =
+        pixel_component_offset == 2'd2 ? 2'd2 : 2'd1;
+    wire [11:0] pixel_x_advanced =
+        {1'b0, pixel_x} + {10'd0, pixel_x_step};
     wire selected_slot =
         buffer0_armed && buffer1_armed ? next_slot : !buffer0_armed;
     wire [4:0] packet_dwords = packet_bytes[6:2];
@@ -160,71 +169,91 @@ module pcie_ep_image_dma #(
 
     function [7:0] pixel_component;
         input [2:0] pattern;
-        input integer x;
-        input integer y;
-        input integer component;
-        integer value;
-        integer stripe;
+        input [10:0] x;
+        input [10:0] y;
+        input [1:0] component;
+        reg [18:0] scaled_value;
+        reg [7:0] value;
         begin
-            value = 0;
+            value = 8'd0;
+            scaled_value = 19'd0;
             case (pattern)
                 3'd0: begin
-                    stripe = x / 240;
-                    case (stripe)
-                        0: value = 255;
-                        1: value = component == 2 ? 0 : 255;
-                        2: value = component == 0 ? 0 : 255;
-                        3: value = component == 1 ? 255 : 0;
-                        4: value = component == 1 ? 0 : 255;
-                        5: value = component == 0 ? 255 : 0;
-                        6: value = component == 2 ? 255 : 0;
-                        default: value = 0;
+                    case (component)
+                        2'd0: value = (x < 11'd480 ||
+                                       (x >= 11'd960 && x < 11'd1440))
+                                      ? 8'hff : 8'd0;
+                        2'd1: value = x < 11'd960 ? 8'hff : 8'd0;
+                        2'd2: value = (x < 11'd240 ||
+                                       (x >= 11'd480 && x < 11'd720) ||
+                                       (x >= 11'd960 && x < 11'd1200) ||
+                                       (x >= 11'd1440 && x < 11'd1680))
+                                      ? 8'hff : 8'd0;
+                        default: value = 8'd0;
                     endcase
                 end
-                3'd1: value = (x * 255) / 1919;
-                3'd2: value = (((x / 120) + (y / 120)) & 1) ? 0 : 255;
+                3'd1: begin
+                    scaled_value = {8'd0, x} * 19'd255;
+                    value = scaled_value / 19'd1919;
+                end
+                3'd2:
+                    value = (((x / 11'd120) + (y / 11'd120)) & 1)
+                            ? 8'd0 : 8'hff;
                 3'd3: begin
-                    if (component == 0)
-                        value = (x * 255) / 1919;
-                    else if (component == 1)
-                        value = (y * 255) / 1079;
-                    else
-                        value = 128;
+                    if (component == 2'd0) begin
+                        scaled_value = {8'd0, x} * 19'd255;
+                        value = scaled_value / 19'd1919;
+                    end else if (component == 2'd1) begin
+                        scaled_value = {8'd0, y} * 19'd255;
+                        value = scaled_value / 19'd1079;
+                    end else
+                        value = 8'd128;
                 end
-                3'd4: value = ((x >= 956 && x <= 963) ||
-                               (y >= 536 && y <= 543)) ? 255 : 0;
+                3'd4: value = ((x >= 11'd956 && x <= 11'd963) ||
+                               (y >= 11'd536 && y <= 11'd543))
+                              ? 8'hff : 8'd0;
                 3'd5: begin
-                    if (y < 540)
-                        value = (x < 960) ? (component == 0 ? 255 : 0)
-                                          : (component == 1 ? 255 : 0);
+                    if (y < 11'd540)
+                        value = (x < 11'd960)
+                              ? (component == 2'd0 ? 8'hff : 8'd0)
+                              : (component == 2'd1 ? 8'hff : 8'd0);
                     else
-                        value = (x < 960) ? (component == 2 ? 255 : 0) : 255;
+                        value = (x < 11'd960)
+                              ? (component == 2'd2 ? 8'hff : 8'd0)
+                              : 8'hff;
                 end
-                default: value = 0;
+                default: value = 8'd0;
             endcase
-            pixel_component = value[7:0];
+            pixel_component = value;
         end
     endfunction
 
     function [31:0] pixel_dword;
-        input [31:0] offset;
+        input [10:0] x;
+        input [10:0] y;
+        input [1:0] component_offset;
         input [2:0] pattern;
         integer lane;
-        integer pixel_index;
-        integer x;
-        integer y;
-        integer component;
-        integer byte_index;
+        reg [2:0] lane_component_sum;
+        reg [10:0] lane_x;
+        reg [10:0] lane_y;
         begin
             pixel_dword = 32'd0;
             for (lane = 0; lane < 4; lane = lane + 1) begin
-                byte_index = offset + lane;
-                pixel_index = byte_index / 3;
-                component = byte_index % 3;
-                x = pixel_index % 1920;
-                y = pixel_index / 1920;
+                lane_component_sum = {1'b0, component_offset} + lane;
+                lane_x = x;
+                lane_y = y;
+                if (lane_component_sum >= 3'd3) begin
+                    lane_component_sum = lane_component_sum - 3'd3;
+                    if (x == 11'd1919) begin
+                        lane_x = 11'd0;
+                        lane_y = y + 1'b1;
+                    end else
+                        lane_x = x + 1'b1;
+                end
                 pixel_dword[31-lane*8 -: 8] =
-                    pixel_component(pattern, x, y, component);
+                    pixel_component(pattern, lane_x, lane_y,
+                                    lane_component_sum[1:0]);
             end
         end
     endfunction
@@ -281,9 +310,12 @@ module pcie_ep_image_dma #(
             next_slot <= 1'b0;
             current_pattern <= 3'd0;
             byte_offset <= 32'd0;
-            frame_timer <= 32'd0;
+            frame_timer <= {FRAME_TIMER_WIDTH{1'b0}};
             frame_sequence <= 32'd0;
             current_dma_address <= 64'd0;
+            pixel_x <= 11'd0;
+            pixel_y <= 11'd0;
+            pixel_component_offset <= 2'd0;
             tx_pending <= 1'b0;
             tx_is_dma <= 1'b0;
             tx_phase <= 1'b0;
@@ -334,7 +366,7 @@ module pcie_ep_image_dma #(
                                         dma_running <= 1'b1;
                                         stop_pending <= 1'b0;
                                         frame_due <= 1'b1;
-                                        frame_timer <= 32'd0;
+                                        frame_timer <= {FRAME_TIMER_WIDTH{1'b0}};
                                         frame_sequence <= 32'd0;
                                         dropped_frames <= 32'd0;
                                         error_status <= 32'd0;
@@ -414,7 +446,7 @@ module pcie_ep_image_dma #(
 
             if (dma_running && !stop_pending && FRAME_PERIOD_CYCLES > 0) begin
                 if (frame_timer == FRAME_PERIOD_CYCLES - 1) begin
-                    frame_timer <= 32'd0;
+                    frame_timer <= {FRAME_TIMER_WIDTH{1'b0}};
                     if (!frame_due) begin
                         if (frame_busy || (!buffer0_armed && !buffer1_armed))
                             dropped_frames <= dropped_frames + 1'b1;
@@ -424,7 +456,7 @@ module pcie_ep_image_dma #(
                 end else
                     frame_timer <= frame_timer + 1'b1;
             end else
-                frame_timer <= 32'd0;
+                frame_timer <= {FRAME_TIMER_WIDTH{1'b0}};
 
             if (dma_running && frame_due && !frame_busy && !stop_command) begin
                 if (buffer0_armed || buffer1_armed) begin
@@ -434,6 +466,9 @@ module pcie_ep_image_dma #(
                     current_dma_address <= selected_slot ? buffer1_address :
                                                            buffer0_address;
                     byte_offset <= 32'd0;
+                    pixel_x <= 11'd0;
+                    pixel_y <= 11'd0;
+                    pixel_component_offset <= 2'd0;
                     frame_busy <= 1'b1;
                     frame_due <= 1'b0;
                 end else begin
@@ -455,8 +490,16 @@ module pcie_ep_image_dma #(
 
             if (packet_generate) begin
                 packet_payload[511 - packet_generate_word*32 -: 32] <=
-                    pixel_dword(byte_offset + {25'd0, packet_generate_word, 2'b00},
-                                current_pattern);
+                    pixel_dword(pixel_x, pixel_y,
+                                pixel_component_offset, current_pattern);
+                pixel_component_offset <= pixel_component_offset == 2'd2
+                                        ? 2'd0
+                                        : pixel_component_offset + 1'b1;
+                if (pixel_x_advanced >= 12'd1920) begin
+                    pixel_x <= pixel_x_advanced - 12'd1920;
+                    pixel_y <= pixel_y + 1'b1;
+                end else
+                    pixel_x <= pixel_x_advanced[10:0];
                 if (packet_generate_word + 1'b1 == tx_packet_dwords) begin
                     packet_generate <= 1'b0;
                     packet_ready <= 1'b1;

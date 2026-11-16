@@ -457,7 +457,9 @@ pcie_ep_engine u_pcie_ep_engine(
     .tl_cfg_busdev                           (tl_cfg_busdev                           )
 );
 
-pcie_ep_image_dma u_pcie_ep_image_dma(
+pcie_ep_image_dma #(
+    .FRAME_PERIOD_CYCLES                    (`EP_TL_CLK_REQ * 1000000)
+) u_pcie_ep_image_dma(
     .tl_clk_user                             (tl_clk_user                             ),
     .tl_rst_user                             (tl_rst_user                             ),
     .tl_rx_bardec                            (tl_rx_bardec                            ),
