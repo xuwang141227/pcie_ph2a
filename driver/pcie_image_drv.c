@@ -115,31 +115,34 @@ static int image_stop_hardware(struct image_dev *idev)
 
 	if (idev->dma_quarantined)
 		return -EIO;
-	if (idev->running) {
-		image_writel(idev, CONTROL_STOP, REG_CONTROL);
-		(void)image_readl(idev, REG_STATUS);
-		deadline = jiffies + msecs_to_jiffies(1000);
-		do {
-			status = image_readl(idev, REG_STATUS);
-			if (status & STATUS_STOPPED)
-				break;
-			usleep_range(1000, 2000);
-		} while (time_before(jiffies, deadline));
+	image_writel(idev, CONTROL_STOP, REG_CONTROL);
+	(void)image_readl(idev, REG_STATUS);
+	deadline = jiffies + msecs_to_jiffies(1000);
+	do {
+		status = image_readl(idev, REG_STATUS);
+		if (status != ~0U &&
+		    (status & (STATUS_RUNNING | STATUS_STOPPED)) == STATUS_STOPPED)
+			break;
+		usleep_range(1000, 2000);
+	} while (time_before(jiffies, deadline));
 
-		if (!(status & STATUS_STOPPED)) {
-			image_writel(idev, 0, REG_IRQ_ENABLE);
-			(void)image_readl(idev, REG_STATUS);
-			if (idev->irq >= 0)
-				synchronize_irq(idev->irq);
-			pci_clear_master(idev->pdev);
-			idev->dma_quarantined = true;
-			spin_lock_irqsave(&idev->irq_lock, flags);
-			idev->error = 0xdead0001;
-			spin_unlock_irqrestore(&idev->irq_lock, flags);
-			return -ETIMEDOUT;
-		}
-		idev->running = false;
+	if (status == ~0U ||
+	    (status & (STATUS_RUNNING | STATUS_STOPPED)) != STATUS_STOPPED) {
+		dev_err(&idev->pdev->dev,
+			"DMA STOP failed: status %#010x; quarantining buffers\n",
+			status);
+		image_writel(idev, 0, REG_IRQ_ENABLE);
+		(void)image_readl(idev, REG_STATUS);
+		if (idev->irq >= 0)
+			synchronize_irq(idev->irq);
+		pci_clear_master(idev->pdev);
+		idev->dma_quarantined = true;
+		spin_lock_irqsave(&idev->irq_lock, flags);
+		idev->error = 0xdead0001;
+		spin_unlock_irqrestore(&idev->irq_lock, flags);
+		return -ETIMEDOUT;
 	}
+	idev->running = false;
 
 	image_writel(idev, 0, REG_IRQ_ENABLE);
 	(void)image_readl(idev, REG_STATUS);
@@ -253,10 +256,12 @@ static int image_mmap(struct file *file, struct vm_area_struct *vma)
 
 	mutex_lock(&idev->session_lock);
 	if (idev->removed || idev->dma_quarantined ||
+	    (vma->vm_flags & VM_WRITE) ||
 	    slot >= PCIE_IMAGE_SLOTS ||
 	    vma->vm_pgoff % slot_pages ||
 	    requested != PAGE_ALIGN(PCIE_IMAGE_SLOT_BYTES)) {
-		ret = idev->removed ? -ENODEV : -EINVAL;
+		ret = idev->removed ? -ENODEV :
+		      idev->dma_quarantined ? -EIO : -EINVAL;
 	} else {
 		vma->vm_pgoff = 0;
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0)
@@ -363,8 +368,6 @@ static long image_ioctl(struct file *file, unsigned int command,
 		idev->pattern = value;
 		spin_lock_irqsave(&idev->irq_lock, flags);
 		idev->error = 0;
-		idev->slots[0].state = SLOT_DEVICE;
-		idev->slots[1].state = SLOT_DEVICE;
 		spin_unlock_irqrestore(&idev->irq_lock, flags);
 		image_writel(idev, lower_32_bits(idev->slots[0].dma_addr),
 			     REG_BUF0_ADDR_LO);
@@ -374,24 +377,40 @@ static long image_ioctl(struct file *file, unsigned int command,
 			     REG_BUF1_ADDR_LO);
 		image_writel(idev, upper_32_bits(idev->slots[1].dma_addr),
 			     REG_BUF1_ADDR_HI);
-		image_writel(idev, value, REG_PATTERN);
-		image_writel(idev, ~0U, REG_ERROR);
-		image_writel(idev, CONTROL_REARM0 | CONTROL_REARM1, REG_CONTROL);
-		image_writel(idev, IRQ_ALL, REG_IRQ_ENABLE);
-		image_writel(idev, CONTROL_START, REG_CONTROL);
-		value = image_readl(idev, REG_STATUS);
-		if (!(value & STATUS_RUNNING) || image_readl(idev, REG_ERROR)) {
-			image_writel(idev, 0, REG_IRQ_ENABLE);
-			(void)image_readl(idev, REG_STATUS);
-			synchronize_irq(idev->irq);
-			spin_lock_irqsave(&idev->irq_lock, flags);
-			idev->slots[0].state = SLOT_FREE;
-			idev->slots[1].state = SLOT_FREE;
-			spin_unlock_irqrestore(&idev->irq_lock, flags);
+		if (image_readl(idev, REG_BUF0_ADDR_LO) !=
+		    lower_32_bits(idev->slots[0].dma_addr) ||
+		    image_readl(idev, REG_BUF0_ADDR_HI) !=
+		    upper_32_bits(idev->slots[0].dma_addr) ||
+		    image_readl(idev, REG_BUF1_ADDR_LO) !=
+		    lower_32_bits(idev->slots[1].dma_addr) ||
+		    image_readl(idev, REG_BUF1_ADDR_HI) !=
+		    upper_32_bits(idev->slots[1].dma_addr)) {
+			dev_err(&idev->pdev->dev,
+				"DMA buffer address readback mismatch; START aborted\n");
 			ret = -EIO;
 			goto start_out;
 		}
+		image_writel(idev, value, REG_PATTERN);
+		image_writel(idev, ~0U, REG_ERROR);
+		spin_lock_irqsave(&idev->irq_lock, flags);
+		idev->slots[0].state = SLOT_DEVICE;
+		idev->slots[1].state = SLOT_DEVICE;
+		spin_unlock_irqrestore(&idev->irq_lock, flags);
+		image_writel(idev, CONTROL_REARM0 | CONTROL_REARM1, REG_CONTROL);
+		image_writel(idev, IRQ_ALL, REG_IRQ_ENABLE);
 		idev->running = true;
+		image_writel(idev, CONTROL_START, REG_CONTROL);
+		value = image_readl(idev, REG_STATUS);
+		if (value == ~0U ||
+		    (value & (STATUS_RUNNING | STATUS_STOPPED)) != STATUS_RUNNING ||
+		    image_readl(idev, REG_ERROR)) {
+			dev_err(&idev->pdev->dev,
+				"DMA START failed: status %#010x\n", value);
+			ret = image_stop_hardware(idev);
+			if (!ret)
+				ret = -EIO;
+			goto start_out;
+		}
 start_out:
 		mutex_unlock(&idev->session_lock);
 		return ret;
@@ -511,7 +530,12 @@ static irqreturn_t image_irq(int irq, void *data)
 	if (READ_ONCE(idev->removed))
 		return IRQ_NONE;
 
-	pending = image_readl(idev, REG_IRQ_STATUS) & IRQ_ALL;
+	pending = image_readl(idev, REG_IRQ_STATUS);
+	if (pending == ~0U) {
+		dev_err_ratelimited(&idev->pdev->dev, "BAR2 IRQ_STATUS read failed\n");
+		return IRQ_NONE;
+	}
+	pending &= IRQ_ALL;
 	if (!pending)
 		return IRQ_NONE;
 
@@ -577,6 +601,7 @@ static int image_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (!idev)
 		return -ENOMEM;
 	idev->pdev = pci_dev_get(pdev);
+	idev->irq = -1;
 	kref_init(&idev->ref);
 	mutex_init(&idev->session_lock);
 	spin_lock_init(&idev->irq_lock);
@@ -593,7 +618,7 @@ static int image_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
 	if (ret)
 		goto err_regions;
-	pci_set_master(pdev);
+	pci_clear_master(pdev);
 	idev->bar = pci_iomap(pdev, IMAGE_BAR, 0);
 	if (!idev->bar) {
 		ret = -ENOMEM;
@@ -607,6 +632,10 @@ static int image_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		ret = -ENODEV;
 		goto err_iounmap;
 	}
+	ret = image_stop_hardware(idev);
+	if (ret)
+		goto err_iounmap;
+	pci_set_master(pdev);
 	for (i = 0; i < PCIE_IMAGE_SLOTS; i++) {
 		idev->slots[i].cpu_addr =
 			dma_alloc_coherent(&pdev->dev, PCIE_IMAGE_SLOT_BYTES,
