@@ -8,6 +8,8 @@ module ep_bar0_32k_tb;
     reg rx_eop = 1'b0;
     reg rx_sop = 1'b0;
     reg [15:0] rx_valid = 16'd0;
+    reg tx_wait = 1'b0;
+    reg [511:0] held_tx_data;
     wire [511:0] tx_data;
     wire tx_eop;
     wire tx_sop;
@@ -34,7 +36,7 @@ module ep_bar0_32k_tb;
         .tl_tx_sop(tx_sop),
         .tl_tx_stream(),
         .tl_tx_valid(tx_valid),
-        .tl_tx_wait(1'b0),
+        .tl_tx_wait(tx_wait),
         .tl_tx_credits(96'd0),
         .tl_cfg_busdev(13'h008)
     );
@@ -266,9 +268,17 @@ module ep_bar0_32k_tb;
         send_write_2dw(32'h0000_7ff8, 32'h1234_5678, 32'h89ab_cdef);
         repeat(8) @(negedge clk);
 
+        tx_wait = 1'b1;
         send_read_64(64'h0000_0001_0000_03f8);
         wait(tx_sop);
         #1;
+        held_tx_data = tx_data;
+        repeat(4) begin
+            @(negedge clk);
+            if (!tx_sop || !tx_eop || tx_valid !== 16'hf800 ||
+                tx_data !== held_tx_data)
+                $fatal(1, "BAR0 completion changed during TX backpressure");
+        end
         if(tx_data[511:509] !== 3'b010 ||
            tx_data[415:384] !== 32'h1234_5678 ||
            tx_data[383:352] !== 32'h89ab_cdef) begin
@@ -276,6 +286,7 @@ module ep_bar0_32k_tb;
             $fatal(1);
         end
 
+        tx_wait = 1'b0;
         wait(!tx_sop);
         send_write_2dw(32'h0000_003c, 32'h0bad_f00d, 32'hc001_d00d);
         repeat(8) @(negedge clk);
@@ -323,7 +334,7 @@ module ep_bar0_32k_tb;
         send_read_1byte(32'h0000_7d00);
         wait(tx_sop);
         #1;
-        if(tx_data[415:384] !== 32'ha0ad_0000 ||
+        if(tx_data[415:384] !== 32'ha000_be00 ||
            tx_data[459:448] !== 12'd1 ||
            tx_data[422:416] !== 7'd2) begin
             $display("FAIL: byte-enable completion header/data mismatch");

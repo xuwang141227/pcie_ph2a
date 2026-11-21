@@ -133,8 +133,14 @@
     wire                tx_mux_dma;
     wire                tx_mux_valid;
     wire                tx_mux_eop;
+    reg                 ep_np_pending;
+    wire                ep_np_request = tl_rx_sop && tl_rx_valid[15] &&
+        ((tl_rx_bardec[0] && tl_rx_data[508:504] == 5'b00000 &&
+          (tl_rx_data[511:509] == 3'b000 || tl_rx_data[511:509] == 3'b001)) ||
+         (tl_rx_data[508:504] == 5'b00010 &&
+          (tl_rx_data[511:509] == 3'b000 || tl_rx_data[511:509] == 3'b010)));
 
-    assign tl_rx_wait = ep_rx_wait || image_rx_wait;
+    assign tl_rx_wait = ep_rx_wait || image_rx_wait || (ep_np_pending && ep_np_request);
     assign tx_mux_dma = tx_mux_locked ? tx_mux_owner_dma :
         ((|image_tx_valid) && (!(|ep_tx_valid) || tx_mux_prefer_dma));
     assign tx_mux_valid = tx_mux_dma ? (|image_tx_valid) : (|ep_tx_valid);
@@ -145,6 +151,18 @@
     assign tl_tx_sop = tx_mux_dma ? image_tx_sop : ep_tx_sop;
     assign tl_tx_stream = tx_mux_dma ? image_tx_stream : ep_tx_stream;
     assign tl_tx_valid = tx_mux_dma ? image_tx_valid : ep_tx_valid;
+
+    always @(posedge tl_clk_user or posedge tl_rst_user) begin
+        if (tl_rst_user)
+            ep_np_pending <= 1'b0;
+        else begin
+            if (ep_np_request && !tl_rx_wait)
+                ep_np_pending <= 1'b1;
+            if (ep_np_pending && !tx_mux_dma && ep_tx_valid[15] &&
+                ep_tx_eop && !tl_tx_wait)
+                ep_np_pending <= 1'b0;
+        end
+    end
 
     always @(posedge tl_clk_user or posedge tl_rst_user) begin
         if (tl_rst_user) begin

@@ -52,6 +52,15 @@ iverilog -g2012 -Wall -I fpga/Design/Rtl/common -s pcie_ep_bar2_tb \
   -o /tmp/pcie_ep_bar2_tb fpga/Design/Sim/tb/pcie_ep_bar2_tb.v \
   fpga/Design/Rtl/ep_side/pcie_ep_image_dma.v
 vvp /tmp/pcie_ep_bar2_tb
+
+# No vendor IP model: exercise the top-level user TX/RX logic with forced signals.
+iverilog -g2012 -i -I fpga/Design/Rtl/common -s pcie_ep_shared_tx_tb \
+  -o /tmp/pcie_ep_shared_tx_tb fpga/Design/Sim/tb/pcie_ep_shared_tx_tb.v \
+  fpga/Design/Rtl/ep_side/ph2_pcie_ep_top.v \
+  fpga/Design/Rtl/ep_side/pcie_ep_engine.v \
+  fpga/Design/Rtl/ep_side/pcie_ep_image_dma.v \
+  fpga/Design/Rtl/ep_side/pcie_ep_int_handle.v fpga/Design/Rtl/common/eram.v
+vvp /tmp/pcie_ep_shared_tx_tb
 ```
 
 完整 PCIe 链路仿真需要厂商 IP 模型，这些测试不替代链路仿真。

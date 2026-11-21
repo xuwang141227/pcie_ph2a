@@ -270,7 +270,15 @@ begin
             iow_flag   <= 1'b0;
             ior_flag   <= 1'b0;
             memrd_flag <= 1'b0;
-        end else if( tl_rx_sop_ff ) begin
+        end else if( tl_rx_sop_ff &&
+                     ((tl_rx_bardec_ff[0] &&
+                       (tl_rx_data_ff[511:509] == `MRD_FMT_3DW ||
+                        tl_rx_data_ff[511:509] == `MRD_FMT_4DW) &&
+                       tl_rx_data_ff[508:504] == `MRD_TYPE) ||
+                      (tl_rx_data_ff[508:504] == `IORD_TYPE &&
+                       tl_rx_data_ff[511:509] == `IORD_FMT) ||
+                      (tl_rx_data_ff[508:504] == `IOWR_TYPE &&
+                       tl_rx_data_ff[511:509] == `IOWR_FMT))) begin
             if( tl_rx_data_ff[511:509] == `IOWR_FMT  & tl_rx_data_ff[508:504] == `IOWR_TYPE  ) begin
                 iow_flag   <= 1'b1;
                 io_addr    <= tl_rx_data_ff[423:418]; // dw align
@@ -429,7 +437,8 @@ generate
                 if (memwr_flag && bar0_payload_valid[lane] &&
                     bar0_lane_addr[lane][3:0] == bar0_bank_gen) begin
                     we = 1'b1;
-                    be = be | bar0_lane_be[lane];
+                    be = be | {bar0_lane_be[lane][0], bar0_lane_be[lane][1],
+                               bar0_lane_be[lane][2], bar0_lane_be[lane][3]};
                     addr = addr | bar0_lane_addr[lane][7:4];
                     data = data | tl_rx_data_2ff[lane*32 +: 32];
                 end
@@ -616,6 +625,7 @@ always@(posedge tl_clk_user or posedge tl_rst_user) begin
             end
 
             TL_TX_ACK_MEMR:begin
+              if (!tl_tx_valid[15] || !tl_tx_wait) begin
                 if( mem_first_cycle ) // first cycle
                     tl_tx_sop <= 1'b1;
                 else
@@ -663,6 +673,7 @@ always@(posedge tl_clk_user or posedge tl_rst_user) begin
 
                 if( tl_tx_eop & tl_tx_valid[15] & (!tl_tx_wait)  )
                     tl_tx_state     <= TL_TX_IDLE;
+              end
             end
 
             TL_TX_ACK_MSIX:begin
@@ -734,7 +745,7 @@ begin
     if(tl_rst_user)
         tl_mr_len_ff <= 11'b0;
     else if( tl_rx_sop_ff  )
-        if( (tl_rx_data_ff[511:509] == `MRD_FMT_3DW || tl_rx_data_ff[511:509] == `MRD_FMT_4DW )  & tl_rx_data_ff[508:504] == `MRD_TYPE )
+        if( tl_rx_bardec_ff[0] && (tl_rx_data_ff[511:509] == `MRD_FMT_3DW || tl_rx_data_ff[511:509] == `MRD_FMT_4DW )  & tl_rx_data_ff[508:504] == `MRD_TYPE )
             tl_mr_len_ff  <= (|tl_rx_data_ff[489:480]) ? {1'b0,tl_rx_data_ff[489:480]}  : 11'd1024 ; // max is 1024*4 = 4096 bytes
    else
         tl_mr_len_ff   <= tl_mr_len_ff;
