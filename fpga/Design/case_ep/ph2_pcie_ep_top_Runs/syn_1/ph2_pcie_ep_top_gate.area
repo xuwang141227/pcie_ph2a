@@ -1,0 +1,96 @@
+standard
+***Report Model: ph2_pcie_ep_top Device: PH2A106FLG676***
+
+Design Statistics
+#IO                        22   out of    286    7.69%
+  #input                    5
+  #output                  17
+  #inout                    0
+#lut                    16557
+  #lut1                     9
+  #lut2                  1747
+  #lut3                  3110
+  #lut4                  3111
+  #lut5                  4684
+  #lut6                  3896
+  #lut6p                    0
+#carry4                   112
+#reg                     5749
+  #unit reg              5749
+  #pad reg                  0
+#dram                       0
+#shifter                    0
+#eram                      16
+#fifo                       0
+#dsp                        8
+
+Utilization Statistics
+#unit lut*              13266   out of 246720    5.38%
+  #logic lut*           13266
+  #dram lut                 0
+  #shifter lut              0
+#carry4                   112   out of  61680    0.18%
+#unit reg                5749   out of 493440    1.17%
+  #dff                   5749
+  #latch                    0
+#f7mux                     70   out of 123360    0.06%
+#f8mux                     35   out of  61680    0.06%
+#eram                      16   out of   1200    1.33%
+  #eram20k                 16
+  #fifo20k                  0
+#eram144k                   0   out of    120    0.00%
+#dsp                        8   out of   1800    0.44%
+#pcie                       1   out of      2   50.00%
+#hxt quad                   1   out of      4   25.00%
+#cgmac                      0   out of      2    0.00%
+#ppc                        0   out of      4    0.00%
+#pad                       22   out of    286    7.69%
+#pll                        1   out of      5   20.00%
+#dpll                       0   out of     10    0.00%
+#cbuf                       0   out of     40    0.00%
+#dbuf                       0   out of     20    0.00%
+#sbuf                       1   out of    140    0.71%
+#dbuf_hxt                   0   out of    140    0.00%
+
+* Note! The LUT and Slice count after Optimize-Gate is not the final value, Run Optimize-place for a more realistic count.
+
+Report Hierarchy Area:
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|Instance                                       |Module                             |logic lut |carry4  |seq     |eram    |eram144k |dsp     |dram lut |shifter lut |f7mux   |f8mux   |pll     |hxt quad |pcie    |ddr     |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|top                                            |ph2_pcie_ep_top                    |13266     |112     |5749    |16      |0        |8       |0        |0           |70      |35      |1       |1        |1       |0       |
+|  u_ep_ubus_bridge                             |ep_ubus_bridge                     |144       |0       |620     |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    u_phy0_ubus2apb                            |ubus2phy_apb                       |15        |0       |93      |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    u_ubus2apb_pcie                            |ubus2pcie_apb                      |15        |0       |92      |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|  u_pcie_ep_engine                             |pcie_ep_engine                     |7924      |0       |2065    |16      |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[0]$u_bar0_bank                  |ram                                |392       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[10]$u_bar0_bank                 |ram                                |360       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[11]$u_bar0_bank                 |ram                                |380       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[12]$u_bar0_bank                 |ram                                |388       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[13]$u_bar0_bank                 |ram                                |370       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[14]$u_bar0_bank                 |ram                                |394       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[15]$u_bar0_bank                 |ram                                |881       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[1]$u_bar0_bank                  |ram                                |403       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[2]$u_bar0_bank                  |ram                                |369       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[3]$u_bar0_bank                  |ram                                |371       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[4]$u_bar0_bank                  |ram                                |382       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[5]$u_bar0_bank                  |ram                                |365       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[6]$u_bar0_bank                  |ram                                |374       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[7]$u_bar0_bank                  |ram                                |377       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[8]$u_bar0_bank                  |ram                                |383       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    g_bar0_ram[9]$u_bar0_bank                  |ram                                |358       |0       |0       |1       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|  u_pcie_ep_image_dma                          |pcie_ep_image_dma                  |3930      |88      |1539    |0       |0        |8       |0        |0           |0       |0       |0       |0        |0       |0       |
+|  u_pcie_ep_int_handle                         |pcie_ep_int_handle                 |3         |0       |3       |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|  u_pcie_pll_ep                                |pcie_pll_ep                        |1         |0       |0       |0       |0        |0       |0        |0           |0       |0       |1       |0        |0       |0       |
+|  u_pcie_uart                                  |pcie_uart                          |310       |16      |770     |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    bps_rx                                     |bps_setting                        |17        |0       |14      |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    bps_tx                                     |bps_setting                        |17        |0       |14      |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    u_hxt_uprotocol                            |pcie_uprotocol                     |117       |8       |301     |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    u_pcie_uprotocol                           |pcie_uprotocol                     |117       |8       |301     |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    u_uart_cdc                                 |uart_cdc                           |4         |0       |83      |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    uart_rx_setting_u                          |uart_rx_setting                    |18        |0       |29      |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|    uart_tx_setting_u                          |uart_tx_setting                    |11        |0       |17      |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
+|  u_ph2_pcie_ep_subsystem                      |ph2_pcie_ep_subsystem              |770       |0       |539     |0       |0        |0       |0        |0           |70      |35      |0       |1        |1       |0       |
+|    u1_ph2_pcie_ep_subsystem_phy0_hxt_csr_load |ph2_pcie_ep_subsystem_hxt_csr_load |410       |0       |495     |0       |0        |0       |0        |0           |70      |35      |0       |0        |0       |0       |
+|  u_ph2_pcie_rst_sync                          |ph2_pcie_rst_sync                  |12        |0       |14      |0       |0        |0       |0        |0           |0       |0       |0       |0        |0       |0       |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

@@ -1,0 +1,69 @@
+standard
+***Report Model: ph2_pcie_ep_top Device: PH2A106FLG676***
+
+IO Statistics
+#IO                        22
+  #input                    5
+  #output                  17
+  #inout                    0
+
+Gate Statistics
+#Basic gates            25630
+  #and                   1504
+  #nand                     0
+  #or                     436
+  #nor                      0
+  #xor                     15
+  #xnor                     0
+  #buf                      0
+  #not                   1194
+  #bufif1                   0
+  #MX21                 16184
+  #FADD                     0
+  #DFF                   6297
+  #LATCH                    0
+#MACRO_ADD               1008
+#MACRO_EQ                 157
+#MACRO_MULT                 8
+#MACRO_MUX               5996
+
+Report Hierarchy Area:
++-----------------------------------------------------------------------------------------------------------+
+|Instance                                       |Module                             |gates  |seq    |macros |
++-----------------------------------------------------------------------------------------------------------+
+|top                                            |ph2_pcie_ep_top                    |19333  |6297   |1173   |
+|  u_ep_ubus_bridge                             |ep_ubus_bridge                     |28     |620    |9      |
+|    u_phy0_ubus2apb                            |ubus2phy_apb                       |8      |93     |0      |
+|    u_ubus2apb_pcie                            |ubus2pcie_apb                      |8      |92     |0      |
+|  u_pcie_ep_engine                             |pcie_ep_engine                     |12225  |2577   |126    |
+|    g_bar0_ram[0]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|    g_bar0_ram[10]$u_bar0_bank                 |ram                                |0      |32     |0      |
+|    g_bar0_ram[11]$u_bar0_bank                 |ram                                |0      |32     |0      |
+|    g_bar0_ram[12]$u_bar0_bank                 |ram                                |0      |32     |0      |
+|    g_bar0_ram[13]$u_bar0_bank                 |ram                                |0      |32     |0      |
+|    g_bar0_ram[14]$u_bar0_bank                 |ram                                |0      |32     |0      |
+|    g_bar0_ram[15]$u_bar0_bank                 |ram                                |0      |32     |0      |
+|    g_bar0_ram[1]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|    g_bar0_ram[2]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|    g_bar0_ram[3]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|    g_bar0_ram[4]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|    g_bar0_ram[5]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|    g_bar0_ram[6]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|    g_bar0_ram[7]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|    g_bar0_ram[8]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|    g_bar0_ram[9]$u_bar0_bank                  |ram                                |0      |32     |0      |
+|  u_pcie_ep_image_dma                          |pcie_ep_image_dma                  |5754   |1539   |936    |
+|  u_pcie_ep_int_handle                         |pcie_ep_int_handle                 |3      |3      |0      |
+|  u_pcie_pll_ep                                |pcie_pll_ep                        |0      |0      |0      |
+|  u_pcie_uart                                  |pcie_uart                          |363    |770    |48     |
+|    bps_rx                                     |bps_setting                        |3      |14     |3      |
+|    bps_tx                                     |bps_setting                        |3      |14     |3      |
+|    u_hxt_uprotocol                            |pcie_uprotocol                     |140    |301    |19     |
+|    u_pcie_uprotocol                           |pcie_uprotocol                     |140    |301    |19     |
+|    u_uart_cdc                                 |uart_cdc                           |7      |83     |0      |
+|    uart_rx_setting_u                          |uart_rx_setting                    |45     |29     |2      |
+|    uart_tx_setting_u                          |uart_tx_setting                    |24     |17     |2      |
+|  u_ph2_pcie_ep_subsystem                      |ph2_pcie_ep_subsystem              |503    |575    |50     |
+|    u1_ph2_pcie_ep_subsystem_phy0_hxt_csr_load |ph2_pcie_ep_subsystem_hxt_csr_load |480    |531    |46     |
+|  u_ph2_pcie_rst_sync                          |ph2_pcie_rst_sync                  |3      |14     |2      |
++-----------------------------------------------------------------------------------------------------------+

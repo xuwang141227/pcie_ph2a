@@ -1,0 +1,120 @@
+-----------------------------------------------------------
+| QoR metrics               |         value               |
+-----------------------------------------------------------
+| Timing                    |                             |
+|     Setup WNS             |       -19958                |
+|     Setup TNS             |     -9524576                |
+|     Num of violated S-EP  |          512                |
+-----------------------------------------------------------
+| Utilization               |                             |
+|     #registers            |         5749                |
+|     #luts                 |        16111                |
+|     #lutxs                |          446                |
+|     #lut1                 |            9                |
+|     #lut1(~A)             |            9                |
+|     #RAMs                 |           16                |
+|     #DSPs                 |            8                |
+|     #f7mux                |        0.06%                |
+|     #carry4               |        0.18%                |
+|     #MACROs               |           56                |
+|     #insts in MACRO       |          819                |
+-----------------------------------------------------------
+| kept_net                  |                             |
+|     #syn_keep             |          247                |
+|     #keep_hier            |            0                |
+|     #dont_touch           |            0                |
+|     #mark_debug           |            0                |
+|     #max_fanout_keep      |            0                |
+|     #async_reg            |            0                |
+-----------------------------------------------------------
+| Top 1% datanet fanout#    |        66.62                |
+| dff(single fanout)->dff   |          884                |
+| dff(single fanout)->dram  |            0                |
+-----------------------------------------------------------
+| Over-quota path num*      |                             |
+|     tl_clk_user           |          512                |
+|     Total Number          |          512                |
+|     Total Level Slack     |       -20688                |
+|     Worst Level Slack     |          -42                |
+-----------------------------------------------------------
+| Rent**                    |                             |
+|     u_ph2_pcie_ep_subs... |         0.77                |
+-----------------------------------------------------------
+Note*: Over-quota path shows the over-path-level-threshold path number of each clock.
+       The clock will not be shown if no path is with path level over the threshold.
+       The threshold is defined as worst path_margin / 500ps.
+Note**: Rent shows the rent exponent value of the modules whose rent value exceeds the threshold.
+        Only modules under top are reported, and the threshold is defined as 0.7.
+
+Over-quota Path Details
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     Clock     |  Index  |  Budget(Period)  |  Level(Quota)  |                                                                                                                                                                                Cell Type List                                                                                                                                                                                 |  Reason  |  Slack   
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  tl_clk_user  |    1    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT3,LUT6,LUT6,SEQ  |  normal  |  -17459  
+               |    2    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT2,LUT6,LUT6,SEQ  |  normal  |  -17459  
+               |    3    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT2,LUT6,LUT6,SEQ  |  normal  |  -17459  
+               |    4    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT2,LUT6,LUT6,SEQ  |  normal  |  -17459  
+               |    5    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT2,LUT6,LUT6,SEQ  |  normal  |  -17459  
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Note: Table only show top 5 paths for each clock group in default
+
+Logic Level Distribution
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  Clock                                                                             |  Period            |  0     |  1    |  2     |  3    |  4    |  5    |  6     |  7    |  8    |  9   |  10  |  11   |  12  |  13  |  14    |  >=30
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  sys_clk                                                                           |  40.000ns (25MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  tl_clk_user                                                                       |  12.500ns (80MHz)  |  6551  |  388  |  855   |  331  |  130  |  384  |  1444  |  223  |  238  |  92  |  25  |  194  |  28  |  45  |  1261  |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.pcs0_ick_pma_tx0_block  |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.pl_pclk_phy0_ln0        |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.pl_pclk_user            |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.tl_clk_dpll             |  12.500ns (80MHz)  |  53    |  0    |  0     |  0    |  530  |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.tl_clk_user             |  12.500ns (80MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u2_ph2_pcie_ep_subsystem_phy0_top.ock_tx0_block           |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u2_ph2_pcie_ep_subsystem_phy0_top.ock_tx1_block           |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u2_ph2_pcie_ep_subsystem_phy0_top.ock_tx2_block           |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u2_ph2_pcie_ep_subsystem_phy0_top.ock_tx3_block           |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  uart_clk                                                                          |  20.000ns (50MHz)  |  2153  |  280  |  211   |  301  |  123  |  73   |  22    |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  Total                                                                             |  NA                |  8757  |  668  |  1066  |  632  |  783  |  457  |  1466  |  223  |  238  |  92  |  25  |  194  |  28  |  45  |  1261  |  18944
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Hierarchical Rent Exponent Report
++------------------------------------------------------------------------------------------+
+|Inst                      |Model                   |Rent     |Cell     |Pin     |Term     |
++------------------------------------------------------------------------------------------+
+|top                       |ph2_pcie_ep_top         |0.09     |23099    |117784  |13       |
+|  u_ph2_pcie_ep_subsystem |ph2_pcie_ep_subsystem_7 |0.77     |2276     |11605   |1890     |
+|  u_pcie_uart             |pcie_uart_6             |0.58     |1197     |5082    |267      |
+|  u_pcie_ep_engine        |pcie_ep_engine_2        |0.57     |11120    |59348   |1078     |
+|  u_pcie_ep_image_dma     |pcie_ep_image_dma_3     |0.57     |7071     |36357   |799      |
++------------------------------------------------------------------------------------------+
+Note: Cell represents total number of cells inside module; Pin represents total number of pins
+      which have net connection inside module; Term represents total number of PIs and POs of module.
+      Rent represents the relationship between number of terms and number of cells in module.
+      A module with higher rent corresponds to highly connected logic and strong connectivity with others.
+Report gate stage QoR done.
+
+QoR Evaluation
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+  ID        |  Priority  |  Description                                                     |  Suggestion
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+  QOR-1002  |  HIGH      |  - 512 over-quota path exist.                                    |  - Try following setting to reduce over-quota:
+            |            |                                                                  |      set_param gate map_mode logic_level_prior
+            |            |                                                                  |      set_param gate map_strategy 3(*)
+            |            |                                                                  |      set_param place logic_level_opt on
+            |            |                                                                  |  
+  QOR-3100  |  HIGH      |  - Long carry chain on over quota path, which may introduce lar  |  - Try to use directive "use_ripple = 0" to break the carry cha
+            |            |    ge data path delay.                                           |    in.
+            |            |                                                                  |  
+  QOR-3102  |  MEDIUM    |  - There are 1 slack insensitive huge fanout net(s).             |  - Try to infer these huge fanout net(s) up to clock network:
+            |            |                                                                  |      set_param flow hfn_to_clock 3600
+            |            |                                                                  |      set_param flow hfn_to_clock_slack_threshold 10900
+            |            |                                                                  |  
+  QOR-1001  |  LOW       |  - Gate timing is too bad, SWNS -19958ps and STNS -9524576ps.    |  - Try following setting to improve timing:
+            |            |                                                                  |      set_param gate map_mode logic_level_prior
+            |            |                                                                  |      set_param gate map_strategy 3(*)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Note* (*) means this parameter has been set already.
+      (+) means this parameter has been set, suggest to upgrade higher effort level.
+Note** plesae resolve priority MUST FIX and HIGH issues firstly
+       because these have highly possible to block the timing convergence even stop the flow.
+Note*** some suggested settings are not suitable to use together
+        take care of using them separately if suggestion mentioned.

@@ -1,0 +1,78 @@
+PRJ-1409 : launch_runs syn_1 phy_1  -jobs 6.
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 : ----------------------------------------------------------------
+HDL-1007 : analyze verilog file al_ip/pcie_pll_ep.v
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open99', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(99)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open112', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open110', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open108', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open106', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open104', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open102', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open113', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open111', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open109', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open107', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open105', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open103', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open101', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open100', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open114', assumed default net type 'wire' in al_ip/pcie_pll_ep.v(107)
+HDL-1007 : analyze verilog file al_ip/ph2_pcie_ep_subsystem.v
+HDL-1007 : undeclared symbol 'apb4_preset_in', assumed default net type 'wire' in al_ip/ph2_pcie_ep_subsystem.v(573)
+HDL-1007 : analyze verilog file ../../Rtl/common/PCIE_REG_TABLE.v
+HDL-1007 : analyze verilog file ../../Rtl/common/eram.v
+HDL-1007 : analyze verilog file ../../Rtl/common/ph2_pcie_rst_sync.v
+HDL-1007 : analyze verilog file ../../Rtl/common/ubus/bps_setting.v
+HDL-1007 : analyze verilog file ../../Rtl/common/ubus/pcie_uart.v
+HDL-1007 : analyze verilog file ../../Rtl/common/ubus/pcie_uprotocol.v
+HDL-1007 : analyze verilog file ../../Rtl/common/ubus/uart_cdc.v
+HDL-1007 : analyze verilog file ../../Rtl/common/ubus/uart_rx_setting.v
+HDL-1007 : analyze verilog file ../../Rtl/common/ubus/uart_tx_setting.v
+HDL-1007 : analyze verilog file ../../Rtl/common/ubus2pcie_apb.v
+HDL-1007 : analyze verilog file ../../Rtl/common/ubus2phy_apb.v
+HDL-1007 : analyze verilog file ../../Rtl/ep_side/pcie_ep_int_handle.v
+HDL-1007 : analyze included file ../../Rtl/ep_side/../common/ph2_pcie_case_param.v in ../../Rtl/ep_side/pcie_ep_int_handle.v(16)
+HDL-1007 : back to file '../../Rtl/ep_side/pcie_ep_int_handle.v' in ../../Rtl/ep_side/pcie_ep_int_handle.v(16)
+HDL-1007 : analyze verilog file ../../Rtl/ep_side/ubus_bridge/ep_ubus_bridge.v
+HDL-1007 : analyze verilog file ../../Rtl/ep_side/ph2_pcie_ep_top.v
+HDL-1007 : analyze included file ../../Rtl/ep_side/../common/ph2_pcie_case_param.v in ../../Rtl/ep_side/ph2_pcie_ep_top.v(44)
+HDL-1007 : back to file '../../Rtl/ep_side/ph2_pcie_ep_top.v' in ../../Rtl/ep_side/ph2_pcie_ep_top.v(44)
+HDL-1007 : analyze verilog file ../../Rtl/ep_side/pcie_ep_engine.v
+HDL-1007 : analyze included file ../../Rtl/ep_side/../common/TLP_FMT_TYPE.v in ../../Rtl/ep_side/pcie_ep_engine.v(54)
+HDL-1007 : back to file '../../Rtl/ep_side/pcie_ep_engine.v' in ../../Rtl/ep_side/pcie_ep_engine.v(54)
+HDL-1007 : analyze included file ../../Rtl/ep_side/../common/BDF.v in ../../Rtl/ep_side/pcie_ep_engine.v(55)
+HDL-1007 : back to file '../../Rtl/ep_side/pcie_ep_engine.v' in ../../Rtl/ep_side/pcie_ep_engine.v(55)
+HDL-1007 : analyze verilog file ../../Rtl/ep_side/pcie_ep_image_dma.v
+HDL-1007 : analyze included file ../../Rtl/ep_side/../common/TLP_FMT_TYPE.v in ../../Rtl/ep_side/pcie_ep_image_dma.v(2)
+HDL-1007 : back to file '../../Rtl/ep_side/pcie_ep_image_dma.v' in ../../Rtl/ep_side/pcie_ep_image_dma.v(2)
+HDL-5007 WARNING: The file ../../Rtl/common/PCIE_REG_TABLE.v will not be compiled since it is not included by any other files. Set it as 'global include' if it should be compiled.
+PRJ-5303 WARNING: Run phy_1 failed.
+RUN-1002 : start command "save_best_bits"
+PRJ-1420 : set_run_property syn_1 -flow_property RtlProperty::min_ripple_len::32.
+PRJ-1412 : reset_run syn_1 phy_1.
+PRJ-1409 : launch_runs syn_1 phy_1  -jobs 6.
+PRJ-1416 : stop_run syn_1.
+PRJ-1416 : stop_run phy_1.
+PRJ-1416 : stop_run phy_1.
+RUN-1002 : start command "save_best_bits"
+PRJ-1412 : reset_run phy_1.
+PRJ-1409 : launch_runs phy_1  -jobs 1.

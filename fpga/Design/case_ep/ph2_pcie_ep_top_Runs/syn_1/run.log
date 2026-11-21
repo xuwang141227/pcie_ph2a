@@ -1,0 +1,812 @@
+============================================================
+   TD Release_2026.1_SP1
+   Copyright (c) 2012-2026 Anlogic Inc.
+   Executable = C:/Anlogic/TD_Release_2026.1_SP1.198.412/bin/run.exe
+   Build number = 6.2.2.198412
+   Built at =   16:15:53 Apr 23 2026
+   Run by =     ithelp
+   Run Date =   Sat Nov 21 08:54:19 2026
+
+   Run on =     SHL-BCVQFS3
+============================================================
+RUN-1002 : start command "import_device ph2_106.db -package PH2A106FLG676 -speed 2"
+ARC-1001 : Device Initialization.
+ARC-1001 : ---------------------------------------------------------------
+ARC-1001 :           OPTION          |          IO          |   SETTING   
+ARC-1001 : ---------------------------------------------------------------
+ARC-1001 :   non_jtag_persist(none)  |        36 IOs        |    gpio    
+ARC-1001 :            jtag           |  AE12/AB10/AB12/Y10  |  dedicate  
+ARC-1001 : ---------------------------------------------------------------
+RUN-1003 : finish command "import_device ph2_106.db -package PH2A106FLG676 -speed 2" in  10.788180s wall, 4.562500s user + 0.156250s system = 4.718750s CPU (43.7%)
+
+RUN-1004 : used memory is 1677 MB, reserved memory is 1677 MB, peak memory is 1677 MB
+RUN-1002 : start command "open_project ph2_pcie_ep_top.prj"
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 : ----------------------------------------------------------------
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 : ----------------------------------------------------------------
+HDL-1007 : analyze verilog file ../../al_ip/pcie_pll_ep.v
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open99', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(99)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open112', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open110', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open108', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open106', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open104', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open102', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(102)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open113', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open111', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open109', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open107', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open105', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open103', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open101', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open100', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(103)
+HDL-1007 : undeclared symbol 'pcie_pll_ep_open114', assumed default net type 'wire' in ../../al_ip/pcie_pll_ep.v(107)
+HDL-1007 : analyze verilog file ../../al_ip/ph2_pcie_ep_subsystem.v
+HDL-1007 : undeclared symbol 'apb4_preset_in', assumed default net type 'wire' in ../../al_ip/ph2_pcie_ep_subsystem.v(573)
+HDL-1007 : analyze verilog file ../../../../Rtl/common/eram.v
+HDL-1007 : analyze verilog file ../../../../Rtl/common/ph2_pcie_rst_sync.v
+HDL-1007 : analyze verilog file ../../../../Rtl/common/ubus/bps_setting.v
+HDL-1007 : analyze verilog file ../../../../Rtl/common/ubus/pcie_uart.v
+HDL-1007 : analyze verilog file ../../../../Rtl/common/ubus/pcie_uprotocol.v
+HDL-1007 : analyze verilog file ../../../../Rtl/common/ubus/uart_cdc.v
+HDL-1007 : analyze verilog file ../../../../Rtl/common/ubus/uart_rx_setting.v
+HDL-1007 : analyze verilog file ../../../../Rtl/common/ubus/uart_tx_setting.v
+HDL-1007 : analyze verilog file ../../../../Rtl/common/ubus2pcie_apb.v
+HDL-1007 : analyze verilog file ../../../../Rtl/common/ubus2phy_apb.v
+HDL-1007 : analyze verilog file ../../../../Rtl/ep_side/pcie_ep_int_handle.v
+HDL-1007 : analyze included file ../../../../Rtl/ep_side/../common/ph2_pcie_case_param.v in ../../../../Rtl/ep_side/pcie_ep_int_handle.v(16)
+HDL-1007 : back to file '../../../../Rtl/ep_side/pcie_ep_int_handle.v' in ../../../../Rtl/ep_side/pcie_ep_int_handle.v(16)
+HDL-1007 : analyze verilog file ../../../../Rtl/ep_side/ubus_bridge/ep_ubus_bridge.v
+HDL-1007 : analyze verilog file ../../../../Rtl/ep_side/ph2_pcie_ep_top.v
+HDL-1007 : analyze included file ../../../../Rtl/ep_side/../common/ph2_pcie_case_param.v in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(44)
+HDL-1007 : back to file '../../../../Rtl/ep_side/ph2_pcie_ep_top.v' in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(44)
+HDL-1007 : analyze verilog file ../../../../Rtl/ep_side/pcie_ep_engine.v
+HDL-1007 : analyze included file ../../../../Rtl/ep_side/../common/TLP_FMT_TYPE.v in ../../../../Rtl/ep_side/pcie_ep_engine.v(54)
+HDL-1007 : back to file '../../../../Rtl/ep_side/pcie_ep_engine.v' in ../../../../Rtl/ep_side/pcie_ep_engine.v(54)
+HDL-1007 : analyze included file ../../../../Rtl/ep_side/../common/BDF.v in ../../../../Rtl/ep_side/pcie_ep_engine.v(55)
+HDL-1007 : back to file '../../../../Rtl/ep_side/pcie_ep_engine.v' in ../../../../Rtl/ep_side/pcie_ep_engine.v(55)
+HDL-1007 : analyze verilog file ../../../../Rtl/ep_side/pcie_ep_image_dma.v
+HDL-1007 : analyze included file ../../../../Rtl/ep_side/../common/TLP_FMT_TYPE.v in ../../../../Rtl/ep_side/pcie_ep_image_dma.v(2)
+HDL-1007 : back to file '../../../../Rtl/ep_side/pcie_ep_image_dma.v' in ../../../../Rtl/ep_side/pcie_ep_image_dma.v(2)
+PRJ-1401 : Successfully analyzed 17 source files.
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 : ----------------------------------------------------------------
+RUN-1002 : start command "elaborate -top ph2_pcie_ep_top"
+HDL-1007 : elaborate module ph2_pcie_ep_top in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(17)
+HDL-1007 : port 'dig_out' remains unconnected for this instance in ../../al_ip/pcie_pll_ep.v(49)
+HDL-1007 : elaborate module pcie_pll_ep in ../../al_ip/pcie_pll_ep.v(23)
+HDL-1007 : elaborate module PH2_PHY_SBUF(CE_BYPASS="DISABLE") in C:\Anlogic\TD_Release_2026.1_SP1.198.412\arch/ph2_macro.v(3787)
+HDL-1007 : elaborate module PH2_PHY_PLL(FBKCLK_INT="CLKC0_EXT",FIN0="25.000000000",FBCLK_DIV=2,CLKC0_CPHASE=31,CLKC1_CPHASE=19,CLKC0_DIV=32,CLKC1_DIV=20,CLKC0_DUTY_INT=16,CLKC1_DUTY_INT=10,CLKC0_ENABLE="ENABLE",CLKC1_ENABLE="ENABLE",PLL_USR_RST="ENABLE",PLL_FEED_TYPE="EXTERNAL",LPF_RES=3,LPF_CAP=1,ICP_CUR=63,SSC_RST="DISABLE",SSC_RNGE=0,PI_FREQ_SEL=2,PI_CUR=2) in C:\Anlogic\TD_Release_2026.1_SP1.198.412\arch/ph2_macro.v(990)
+HDL-5317 WARNING: input port 'wakeup' is not connected on this instance in ../../al_ip/pcie_pll_ep.v(91)
+HDL-1007 : elaborate module ph2_pcie_rst_sync in ../../../../Rtl/common/ph2_pcie_rst_sync.v(17)
+HDL-1007 : port 'ock_tx0_div' remains unconnected for this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1721)
+HDL-1007 : port 'ock_tx1_div' remains unconnected for this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1721)
+HDL-1007 : port 'ock_tx2_div' remains unconnected for this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1721)
+HDL-1007 : port 'ock_tx3_div' remains unconnected for this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1721)
+HDL-1007 : port 'ock_rx0_div' remains unconnected for this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1721)
+HDL-1007 : port 'ock_rx1_div' remains unconnected for this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1721)
+HDL-1007 : port 'ock_rx2_div' remains unconnected for this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1721)
+HDL-1007 : port 'ock_rx3_div' remains unconnected for this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1721)
+HDL-1007 : elaborate module ph2_pcie_ep_subsystem in ../../al_ip/ph2_pcie_ep_subsystem.v(15)
+HDL-1007 : elaborate module PH2_PHY_PCIE_V1(CFG_DNS=64'b0,CFG_LANE_ENABLE=8'b01111,CFG_PIPE_LANE_FLIP=8'b0,PCS0_ICTL_PIPE_RXTERMINATION_LN0=1'b1,PCS0_ICTL_PIPE_RXTERMINATION_LN1=1'b1,PCS0_ICTL_PIPE_RXTERMINATION_LN2=1'b1,PCS0_ICTL_PIPE_RXTERMINATION_LN3=1'b1,PCS1_ICTL_PIPE_RXTERMINATION_LN0=1'b1,PCS1_ICTL_PIPE_RXTERMINATION_LN1=1'b1,PCS1_ICTL_PIPE_RXTERMINATION_LN2=1'b1,PCS1_ICTL_PIPE_RXTERMINATION_LN3=1'b1,PCIE_CFG_DEVICE_TYPE="LEGACY EP",PCIE_CFG_LINK_SPEED=4'b011,PCIE_CFG_LINK_WIDTH=4'b1100,PCIE_CFG_CONTROLLER_LOCATION="x147y0z0",PCIE_CFG_REF_CLK_LOCATION=8'b0,PCIE_CFG_TL_CLK_FREQ=9'b01010000,PCIE_CFG_MAX_PAYLOAD_SIZE=3'b101,PCIE_CFG_PF0_DEVICE_ID=16'b1010101111001101,PCIE_CFG_PF0_CLASS_CODE=24'b01000000000000000000,PCIE_CFG_PF1_DEVICE_ID=16'b1010101111001101,PCIE_CFG_PF2_DEVICE_ID=16'b1010101111001101,PCIE_CFG_PF3_DEVICE_ID=16'b1010101111001101,PCIE_CFG_PF0_BAR0_MASK=32'b11111111111111111000000000000000,PCIE_CFG_PF0_BAR1_TYPE=1'b1,PCIE_CFG_PF0_BAR1_MASK=32'b11111111111111111111111100000001,PCIE_CFG_PF0_BAR2_64BIT=1'b1,PCIE_CFG_PF0_BAR2_MASK=32'b11111111111100000000000000000100,PCIE_CFG_PF0_BAR3_MASK=32'b11111111111111111111111111111111,PCIE_CFG_PF0_BAR4_64BIT=1'b1,PCIE_CFG_PF0_BAR4_PREFETCHABLE=1'b1,PCIE_CFG_PF0_BAR4_MASK=32'b11111111111100000000000000001100,PCIE_CFG_PF0_BAR5_MASK=32'b11111111111111111111111111111111,PCIE_CFG_PF1_BAR0_MASK=32'b0,PCIE_CFG_PF2_BAR0_MASK=32'b0,PCIE_CFG_PF3_BAR0_MASK=32'b0,PCIE_CFG_PF0_VF_OFFSIT=16'b01000,PCIE_CFG_PF0_VF_DEVICE_ID=16'b01,PCIE_CFG_PF0_VF_PAGE_SIZE=12'b010100110011,PCIE_CFG_PF1_VF_OFFSIT=16'b0111,PCIE_CFG_PF1_VF_DEVICE_ID=16'b01,PCIE_CFG_PF1_VF_PAGE_SIZE=12'b010100110011,PCIE_CFG_PF2_VF_OFFSIT=16'b0110,PCIE_CFG_PF2_VF_DEVICE_ID=16'b01,PCIE_CFG_PF2_VF_PAGE_SIZE=12'b010100110011,PCIE_CFG_PF3_VF_OFFSIT=16'b0101,PCIE_CFG_PF3_VF_DEVICE_ID=16'b01,PCIE_CFG_PF3_VF_PAGE_SIZE=12'b010100110011,PCIE_CFG_PF0_INT_PIN=3'b01) in C:\Anlogic\TD_Release_2026.1_SP1.198.412\arch/ph2_macro.v(2196)
+HDL-5007 WARNING: actual bit length 4 differs from formal bit length 8 for port 'pcie_lane_enable' in ../../al_ip/ph2_pcie_ep_subsystem.v(1247)
+HDL-1007 : elaborate module ph2_pcie_ep_subsystem_hxt_csr_load(PH2_CSR_HXT_FILE="ph2_pcie_ep_subsystem_hxt_csr.hex") in ../../al_ip/ph2_pcie_ep_subsystem.v(2959)
+HDL-1007 : extracting RAM for identifier 'mem_csr_data' in ../../al_ip/ph2_pcie_ep_subsystem.v(3039)
+HDL-5343 WARNING: system task 'display' is ignored for synthesis in ../../al_ip/ph2_pcie_ep_subsystem.v(3287)
+HDL-5343 WARNING: system task 'display' is ignored for synthesis in ../../al_ip/ph2_pcie_ep_subsystem.v(3581)
+HDL-5343 WARNING: system task 'display' is ignored for synthesis in ../../al_ip/ph2_pcie_ep_subsystem.v(4403)
+HDL-5314 WARNING: net 'mem_csr_data' does not have a driver in ../../al_ip/ph2_pcie_ep_subsystem.v(3039)
+HDL-1007 : elaborate module PH2_PHY_HXT_V1(PH2_SRAM_HXT_FILE="ph2_pcie_ep_subsystem_hxt_sram.hex",SRAM_ICTL_REF_LS_MUX_SEL_NT=3'b100,SRAM_REFCLK_BUF_CMOS_EN=1'b1) in C:\Anlogic\TD_Release_2026.1_SP1.198.412\arch/ph2_macro.v(4489)
+HDL-5317 WARNING: input port 'phy1_pclk_max' is not connected on this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1041)
+HDL-5317 WARNING: input port 'ick_ref_cml_ls_b2t_n[1]' is not connected on this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1734)
+HDL-5007 WARNING: actual bit length 8 differs from formal bit length 4 for port 'pcie_rx_p' in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(307)
+HDL-5007 WARNING: actual bit length 8 differs from formal bit length 4 for port 'pcie_rx_n' in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(308)
+HDL-5007 WARNING: actual bit length 8 differs from formal bit length 4 for port 'pcie_tx_p' in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(309)
+HDL-5007 WARNING: actual bit length 8 differs from formal bit length 4 for port 'pcie_tx_n' in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(310)
+HDL-1007 : elaborate module pcie_ep_engine in ../../../../Rtl/ep_side/pcie_ep_engine.v(19)
+HDL-1007 : elaborate module ram(USE_BYTE_WEA=1,ADDRWIDTH_A=9,DATADEPTH_A=512,USE_BYTE_WEB=1,DATAWIDTH_B=32,ADDRWIDTH_B=9,DATADEPTH_B=512) in ../../../../Rtl/common/eram.v(1)
+HDL-1007 : extracting RAM for identifier 'memory' in ../../../../Rtl/common/eram.v(350)
+HDL-1007 : elaborate module pcie_ep_image_dma in ../../../../Rtl/ep_side/pcie_ep_image_dma.v(4)
+HDL-1007 : elaborate module pcie_ep_int_handle in ../../../../Rtl/ep_side/pcie_ep_int_handle.v(19)
+HDL-1007 : elaborate module pcie_uart in ../../../../Rtl/common/ubus/pcie_uart.v(14)
+HDL-1007 : elaborate module bps_setting in ../../../../Rtl/common/ubus/bps_setting.v(1)
+HDL-1007 : elaborate module uart_rx_setting in ../../../../Rtl/common/ubus/uart_rx_setting.v(7)
+HDL-1007 : elaborate module uart_tx_setting in ../../../../Rtl/common/ubus/uart_tx_setting.v(8)
+HDL-1007 : elaborate module uart_cdc in ../../../../Rtl/common/ubus/uart_cdc.v(3)
+HDL-1007 : elaborate module pcie_uprotocol in ../../../../Rtl/common/ubus/pcie_uprotocol.v(3)
+HDL-1007 : elaborate module ep_ubus_bridge in ../../../../Rtl/ep_side/ubus_bridge/ep_ubus_bridge.v(15)
+HDL-1007 : elaborate module ubus2pcie_apb in ../../../../Rtl/common/ubus2pcie_apb.v(17)
+HDL-1007 : elaborate module ubus2phy_apb in ../../../../Rtl/common/ubus2phy_apb.v(17)
+HDL-5314 WARNING: net 'hxt_phy1_pready' does not have a driver in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(239)
+HDL-5314 WARNING: net 'hxt_phy1_prdata[31]' does not have a driver in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(240)
+HDL-5314 WARNING: net 'hxt_phy1_pslverr' does not have a driver in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(241)
+HDL-1200 : Current top model is ph2_pcie_ep_top
+HDL-1100 : Inferred 2 RAMs.
+RUN-1003 : finish command "elaborate -top ph2_pcie_ep_top" in  2.678445s wall, 2.625000s user + 0.031250s system = 2.656250s CPU (99.2%)
+
+RUN-1004 : used memory is 2108 MB, reserved memory is 2107 MB, peak memory is 2108 MB
+RUN-1002 : start command "read_adc -ip ph2_pcie_ep_subsystem -file ../../al_ip/ph2_pcie_ep_subsystem.adc"
+RUN-1002 : start command "set_ipinst_assignment ph2_pcie_ep_subsystem u0_ph2_pcie_ep_subsystem_pcie_top location=x147y0z0;"
+RUN-1002 : start command "set_ipinst_assignment ph2_pcie_ep_subsystem u2_ph2_pcie_ep_subsystem_phy0_top location=x147y60z0;"
+RUN-1001 : Starting of IO setups legality check.
+RUN-1002 : start command "read_sdc -ip ph2_pcie_ep_subsystem ../../al_ip/ph2_pcie_ep_subsystem.sdc"
+RUN-1002 : start command "export_db ph2_pcie_ep_top_elaborate.db"
+RUN-1001 : Exported flow parameters
+RUN-1001 : Exported /
+RUN-1001 : Exported libs
+RUN-1001 : Exported entities
+RUN-1001 : Exported ports
+RUN-1001 : Exported pins
+RUN-1001 : Exported instances
+RUN-1001 : Exported nets
+RUN-1001 : Exported buses
+RUN-1001 : Exported models
+RUN-1001 : Exported packer
+RUN-1001 : Exported congestions
+RUN-1001 : Exported violations
+RUN-1001 : Exported ATMR Setting
+RUN-1001 : Exported timing constraints
+RUN-1001 : Exported IO constraints
+RUN-1001 : Exported Inst constraints
+RUN-1001 : Exported ChipWatcher
+RUN-1002 : start command "commit_param -step rtl"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1002 : start command "set_param rtl min_ripple_len 32"
+RUN-1001 : Print Rtl Property
+RUN-1001 : -------------------------------------------------------------------
+RUN-1001 :         Parameters        |  Settings  |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------------
+RUN-1001 :        fix_undriven       |     0      |        0         |        
+RUN-1001 :   gated_clock_conversion  |    off     |       off        |        
+RUN-1001 :         infer_fsm         |    auto    |       auto       |        
+RUN-1001 :         infer_rom         |     on     |        on        |        
+RUN-1001 :       infer_shifter       |     on     |        on        |        
+RUN-1001 :       keep_hierarchy      |    auto    |       auto       |        
+RUN-1001 :        merge_equal        |     on     |        on        |        
+RUN-1001 :      min_control_set      |     8      |        8         |        
+RUN-1001 :       min_ripple_len      |     32     |       auto       |   *    
+RUN-1001 :          seq_syn          |     on     |        on        |        
+RUN-1001 : -------------------------------------------------------------------
+RUN-1002 : start command "read_adc ../../constraints/ph2_pcie_case_ep.adc"
+RUN-1002 : start command "set_pin_assignment  debug_led[0]   LOCATION = J23; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; "
+RUN-1002 : start command "set_pin_assignment  debug_led[1]   LOCATION = J24; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; "
+RUN-1002 : start command "set_pin_assignment  debug_led[2]   LOCATION = K26; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; "
+RUN-1002 : start command "set_pin_assignment  debug_led[3]   LOCATION = K25; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; "
+RUN-1002 : start command "set_pin_assignment  debug_led[4]   LOCATION = L25; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; "
+RUN-1002 : start command "set_pin_assignment  debug_led[5]   LOCATION = L24; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; "
+RUN-1002 : start command "set_pin_assignment  debug_led[6]   LOCATION = K23; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; "
+RUN-1002 : start command "set_pin_assignment  debug_led[7]   LOCATION = K22; IOSTANDARD = LVCMOS12; DRIVESTRENGTH = 8; PULLTYPE = NONE; "
+RUN-1002 : start command "set_pin_assignment  pcie_mperst   LOCATION = K10; IOSTANDARD = LVCMOS33;  "
+RUN-1002 : start command "set_pin_assignment  pcie_power_on_rst   LOCATION = C12; IOSTANDARD = LVCMOS18;  "
+RUN-1002 : start command "set_pin_assignment  user_int_trigger   LOCATION = B12; IOSTANDARD = LVCMOS18; "
+RUN-1002 : start command "set_pin_assignment  rxd   LOCATION = B14; IOSTANDARD = LVCMOS18; PULLTYPE = PULLUP; "
+RUN-1002 : start command "set_pin_assignment  txd   LOCATION = A14; IOSTANDARD = LVCMOS18; DRIVESTRENGTH = 8; PULLTYPE = NONE; "
+RUN-1002 : start command "set_pin_assignment  sys_clk   LOCATION = F10; IOSTANDARD = LVCMOS33; PULLTYPE = PULLUP; "
+RUN-1001 : Starting of IO setups legality check.
+RUN-1002 : start command "read_sdc ../../constraints/ph2_pcie_case_ep.sdc"
+RUN-1002 : start command "insert_debugger"
+RUN-1002 : start command "optimize_rtl"
+RUN-1001 : Open license file C:/Anlogic/TD_Release_2026.1_SP1.198.412/license/Anlogic.lic
+SYN-1001 : Stage 1 | Optimize RTL
+SYN-1001 : Stage 1.1 | Check Design Sanity
+SYN-1001 : End Stage 1.1 | Check Design Sanity; Time: 0.024408s wall, 0.031250s user + 0.000000s system = 0.031250s CPU (128.0%); Memory(MB): used = 2133, reserved = 2244, peak = 2133;
+
+SYN-1079 : finish stage Check Design Sanity. Total instances: 82854, Total nets: 197792.
+
+SYN-1001 : Stage 1.2 | Initialize Design
+SYN-1001 : End Stage 1.2 | Initialize Design; Time: 0.256847s wall, 0.234375s user + 0.000000s system = 0.234375s CPU (91.3%); Memory(MB): used = 2133, reserved = 2244, peak = 2133;
+
+SYN-1079 : finish stage Initialize Design. Total instances: 63752, Total nets: 171217.
+
+SYN-1001 : Stage 1.3 | Flatten Module
+SYN-1011 : Flatten model ph2_pcie_ep_top
+SYN-1001 : End Stage 1.3 | Flatten Module; Time: 0.812703s wall, 0.812500s user + 0.000000s system = 0.812500s CPU (100.0%); Memory(MB): used = 2137, reserved = 2244, peak = 2137;
+
+SYN-1079 : finish stage Flatten Module. Total instances: 64271, Total nets: 171045.
+
+SYN-1001 : Stage 1.4 | Uniform Instance
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[31]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[31]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[30]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[30]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[29]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[29]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[28]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[28]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[27]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[27]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[26]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[26]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[25]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[25]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[24]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[24]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[23]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[23]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[22]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[22]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 Similar messages will be suppressed.
+SYN-5025 WARNING: Using 0 for all undriven pins and nets
+SYN-1001 : End Stage 1.4 | Uniform Instance; Time: 0.084707s wall, 0.093750s user + 0.000000s system = 0.093750s CPU (110.7%); Memory(MB): used = 2131, reserved = 2238, peak = 2137;
+
+SYN-1079 : finish stage Uniform Instance. Total instances: 64166, Total nets: 170897.
+
+SYN-1001 : Stage 1.5 | Optimize Design
+SYN-1066 : Inferred FSM for state register 'u_pcie_ep_engine/tl_tx_state_reg' in module 'ph2_pcie_ep_top'
+--------------------------------------------
+     Previous Encoding     New Encoding
+--------------------------------------------
+                 00001            00001
+                 00010            00010
+                 10000            00100
+                 01000            01000
+                 00100            10000
+--------------------------------------------
+SYN-1067 : encoded FSM with state register 'u_pcie_ep_engine/tl_tx_state_reg' using encoding 'one_hot' in model 'ph2_pcie_ep_top'
+SYN-1057 : Inferred 1 FSM(s)
+SYN-1001 : Optimize 3 less-than instances
+SYN-1032 : 166148/1476 useful/useless nets, 63823/0 useful/useless insts
+SYN-1021 : Optimized 16 onehot mux instances.
+SYN-1001 : Share 4 adder instances
+SYN-1021 : Optimized 9 onehot mux instances.
+SYN-1019 : Optimized 204 mux instances.
+SYN-1021 : Optimized 4 onehot mux instances.
+SYN-1021 : Optimized 11 onehot mux instances.
+SYN-1001 : Optimize 836 less-than instances
+SYN-1016 : Merged 22598 instances.
+USR-1002 : Derived clock:  create_generated_clock -name {u_pcie_pll_ep/pll_inst.clkc[0]} -source [get_ports {sys_clk}] -multiply_by 2.0000 -duty_cycle 50.0000 [get_pins {u_pcie_pll_ep/pll_inst.clkc[0]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_pcie_pll_ep/pll_inst.clkc[1]} -source [get_ports {sys_clk}] -multiply_by 3.2000 -duty_cycle 50.0000 [get_pins {u_pcie_pll_ep/pll_inst.clkc[1]}]
+SYN-1016 : Merged 921 instances.
+SYN-1001 : Optimize 1 decoder instances
+SYN-1001 : End Stage 1.5 | Optimize Design; Time: 79.656051s wall, 79.578125s user + 0.015625s system = 79.593750s CPU (99.9%); Memory(MB): used = 2442, reserved = 2438, peak = 2442;
+
+SYN-1079 : finish stage Optimize Design. Total instances: 59619, Total nets: 65777.
+
+SYN-1001 : Stage 1.6 | Optimize Iteratively
+SYN-1019 : Optimized 12 mux instances.
+SYN-1021 : Optimized 565 onehot mux instances.
+SYN-1014 : Optimize round 1
+SYN-1044 : Optimized 64 inv instances.
+SYN-1017 : Remove 15 const input seq instances
+SYN-1019 : Optimized 767 mux instances.
+SYN-1020 : Optimized 23969 distributor mux.
+SYN-1001 : Optimize 30 less-than instances
+SYN-1019 : Optimized 398 mux instances.
+SYN-1016 : Merged 27798 instances.
+SYN-1015 : Optimize round 1, 111928 better
+SYN-1014 : Optimize round 2
+SYN-1044 : Optimized 6 inv instances.
+SYN-1019 : Optimized 69 mux instances.
+SYN-1020 : Optimized 65 distributor mux.
+SYN-1019 : Optimized 70 mux instances.
+SYN-1016 : Merged 156 instances.
+SYN-1015 : Optimize round 2, 789 better
+SYN-3010 : Optimized 139 DFF(s)
+SYN-1014 : Optimize round 1
+SYN-1020 : Optimized 28 distributor mux.
+SYN-1019 : Optimized 7 mux instances.
+SYN-1016 : Merged 37 instances.
+SYN-1015 : Optimize round 1, 84 better
+SYN-1014 : Optimize round 2
+SYN-1044 : Optimized 1 inv instances.
+SYN-1019 : Optimized 8 mux instances.
+SYN-1020 : Optimized 2 distributor mux.
+SYN-1016 : Merged 7 instances.
+SYN-1015 : Optimize round 2, 18 better
+SYN-1014 : Optimize round 3
+SYN-1015 : Optimize round 3, 0 better
+SYN-1001 : End Stage 1.6 | Optimize Iteratively; Time: 24.618643s wall, 24.500000s user + 0.078125s system = 24.578125s CPU (99.8%); Memory(MB): used = 2296, reserved = 2296, peak = 2499;
+
+SYN-1079 : finish stage Optimize Iteratively. Total instances: 33382, Total nets: 39194.
+
+SYN-1001 : Stage 1.7 | Check Design
+SYN-1001 : End Stage 1.7 | Check Design; Time: 0.007782s wall, 0.015625s user + 0.000000s system = 0.015625s CPU (200.8%); Memory(MB): used = 2296, reserved = 2296, peak = 2499;
+
+SYN-1079 : finish stage Check Design. Total instances: 33382, Total nets: 39194.
+
+SYN-1001 : End Stage 1 | Optimize RTL; Time: 105.463976s wall, 105.265625s user + 0.093750s system = 105.359375s CPU (99.9%); Memory(MB): used = 2296, reserved = 2296, peak = 2499;
+
+SYN-1079 : finish stage Optimize RTL. Total instances: 33382, Total nets: 39194.
+
+RUN-1003 : finish command "optimize_rtl" in  105.474046s wall, 105.281250s user + 0.093750s system = 105.375000s CPU (99.9%)
+
+RUN-1004 : used memory is 2296 MB, reserved memory is 2296 MB, peak memory is 2499 MB
+RUN-1002 : start command "report_area -file ph2_pcie_ep_top_rtl.area"
+RUN-1001 : standard
+***Report Model: ph2_pcie_ep_top Device: PH2A106FLG676***
+
+IO Statistics
+#IO                        22
+  #input                    5
+  #output                  17
+  #inout                    0
+
+Gate Statistics
+#Basic gates            25630
+  #and                   1504
+  #nand                     0
+  #or                     436
+  #nor                      0
+  #xor                     15
+  #xnor                     0
+  #buf                      0
+  #not                   1194
+  #bufif1                   0
+  #MX21                 16184
+  #FADD                     0
+  #DFF                   6297
+  #LATCH                    0
+#MACRO_ADD               1008
+#MACRO_EQ                 157
+#MACRO_MULT                 8
+#MACRO_MUX               5996
+
+RUN-1002 : start command "export_db ph2_pcie_ep_top_rtl.db"
+RUN-1001 : Exported flow parameters
+RUN-1001 : Exported /
+RUN-1001 : Exported libs
+RUN-1001 : Exported entities
+RUN-1001 : Exported ports
+RUN-1001 : Exported pins
+RUN-1001 : Exported instances
+RUN-1001 : Exported nets
+RUN-1001 : Exported buses
+RUN-1001 : Exported models
+RUN-1001 : Exported packer
+RUN-1001 : Exported congestions
+RUN-1001 : Exported violations
+RUN-1001 : Exported ATMR Setting
+RUN-1001 : Exported timing constraints
+RUN-1001 : Exported IO constraints
+RUN-1001 : Exported Inst constraints
+RUN-1001 : Exported ChipWatcher
+RUN-1002 : start command "commit_param -step gate"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1002 : start command "set_param gate map_strategy 3"
+RUN-1001 : Print Gate Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   eram_cascade_height  |    auto    |       auto       |        
+RUN-1001 :        map_mode        |    auto    |       auto       |        
+RUN-1001 :      map_strategy      |     3      |        1         |   *    
+RUN-1001 :       pack_effort      |   medium   |      medium      |        
+RUN-1001 :     pack_seq_in_io     |    auto    |       auto       |        
+RUN-1001 :         report         |  standard  |     standard     |        
+RUN-1001 : ----------------------------------------------------------------
+RUN-1002 : start command "optimize_gate -packarea ph2_pcie_ep_top_gate.area"
+RUN-1001 : Open license file C:/Anlogic/TD_Release_2026.1_SP1.198.412/license/Anlogic.lic
+SYN-1001 : Stage 2 | Optimize Gate
+SYN-1001 : Stage 2.1 | Map Reg
+SYN-1001 : End Stage 2.1 | Map Reg; Time: 0.555594s wall, 0.546875s user + 0.000000s system = 0.546875s CPU (98.4%); Memory(MB): used = 2298, reserved = 2374, peak = 2499;
+
+SYN-1079 : finish stage Map Reg. Total instances: 33382, Total nets: 39194.
+
+SYN-1001 : Stage 2.2 | Map IO
+SYN-2001 : Map 48 IOs to PADs of model 'ph2_pcie_ep_top'
+SYN-6021 CRITICAL-WARNING: 8 out of 22 logical ports has no user assigned specific location constraint.
+                           This may affect performance or in some cases cause damage to the device!
+                           Bitgen will abort. If insist on bitgen with risk, please 'set_param bitgen unconstr_io on' to avoid bitgen error.
+                           No ADC ports: pcie_tx_n[7], pcie_tx_n[6], pcie_tx_n[5], pcie_tx_n[4], pcie_tx_p[7], pcie_tx_p[6], pcie_tx_p[5], pcie_tx_p[4].
+                           No ADC ports will be assigned to random location as below:
+                           pcie_tx_n[7]:AE26, pcie_tx_n[6]:AF17, pcie_tx_n[5]:W26, pcie_tx_n[4]:M21, pcie_tx_p[7]:H22, pcie_tx_p[6]:G19, pcie_tx_p[5]:AD15, pcie_tx_p[4]:D10.
+SYN-1001 : End Stage 2.2 | Map IO; Time: 0.111580s wall, 0.093750s user + 0.000000s system = 0.093750s CPU (84.0%); Memory(MB): used = 2299, reserved = 2376, peak = 2499;
+
+SYN-1001 : Stage 2.3 | Map Macro
+RUN-1002 : start command "update_pll_param -module ph2_pcie_ep_top"
+SYN-6577 WARNING: The clock signal "tl_clk_user" is added with the synthetic instruction (keep/mark_debug/dont_touch/max_fanout), which may create additional logic on this net
+SYN-2501 : Processed 0 LOGIC_BUF instances.
+SYN-1019 : Optimized 18 mux instances.
+SYN-1019 : Optimized 8 mux instances.
+SYN-2571 : Map 8 macro multiplier
+SYN-2571 : Optimize after map_dsp, round 1
+SYN-1016 : Merged 81 instances.
+SYN-2571 : Optimize after map_dsp, round 1, 81 better
+SYN-2571 : Optimize after map_dsp, round 2
+SYN-2571 : Optimize after map_dsp, round 2, 0 better
+SYN-2601 : All the used dsp number is 8
+SYN-1001 : Throwback 263 control mux instances
+SYN-1001 : clone 2 adder instances
+SYN-1001 : Generate 780 bigger adders
+SYN-1001 : Convert 15 adder
+SYN-1001 : Optimize 836 adders
+SYN-1001 : Convert 8 adder
+SYN-2501 : Optimize round 1
+SYN-1016 : Merged 411 instances.
+SYN-2501 : Optimize round 1, 1773 better
+SYN-2501 : Optimize round 2
+SYN-2501 : Optimize round 2, 0 better
+SYN-2501 : Optimize round 1
+SYN-2501 : Optimize round 1, 8 better
+SYN-2501 : Optimize round 2
+SYN-2501 : Optimize round 2, 0 better
+SYN-1030 : Map 5 macro adder
+SYN-2501 : Map 878 macro adder(s)
+SYN-1019 : Optimized 1909 mux instances.
+SYN-1016 : Merged 15211 instances.
+SYN-1001 : End Stage 2.3 | Map Macro; Time: 36.729725s wall, 36.562500s user + 0.125000s system = 36.687500s CPU (99.9%); Memory(MB): used = 2350, reserved = 2423, peak = 2499;
+
+SYN-1079 : finish stage Map Macro. Total instances: 41048, Total nets: 46903.
+
+SYN-1001 : Stage 2.4 | Map Gate
+SYN-3001 : Collect 5942 PI 4659 PO (7 timing unconstrained) for mapping
+SYN-2581 : Mapping with K=6, #lut = 16081 (4.42), #lev = 49 (11.28), #crit_level = 49, #edge = 71028
+SYN-2551 : Post LUT mapping optimization.
+SYN-2581 : Mapping with K=6, #lut = 15971 (4.29), #lev = 44 (10.87), #crit_level = 44, #edge = 68557
+SYN-3001 : Logic optimization opt = 5.32 sec, map = 1.97 sec, post map opt = 72.57 sec.
+SYN-1001 : End Stage 2.4 | Map Gate; Time: 93.415053s wall, 93.343750s user + 0.031250s system = 93.375000s CPU (100.0%); Memory(MB): used = 2403, reserved = 2467, peak = 2499;
+
+SYN-1001 : Packing model "ph2_pcie_ep_top" ...
+SYN-1001 : Stage 2.5 | Pack Gate
+SYN-4010 : Pack lib has 0 rtl pack models with 0 top pack blocks
+SYN-1014 : Optimize round 1
+SYN-1015 : Optimize round 1, 0 better
+SYN-4002 : Packing 5749 DFF/LATCH to SEQ ...
+OPT-1001 : End physical optimization;  0.091741s wall, 0.078125s user + 0.000000s system = 0.078125s CPU (85.2%)
+
+OPT-1001 : Update timing in basic mode
+RUN-1002 : start command "start_timer"
+TMR-2502 : Net delay update with mode: Synthesized
+OPT-1001 : End timing update;  0.955397s wall, 0.968750s user + 0.000000s system = 0.968750s CPU (101.4%)
+
+OPT-1001 : End physical optimization;  0.958555s wall, 0.968750s user + 0.000000s system = 0.968750s CPU (101.1%)
+
+SYN-1001 : End Stage 2.5 | Pack Gate; Time: 1.438842s wall, 1.281250s user + 0.125000s system = 1.406250s CPU (97.7%); Memory(MB): used = 2393, reserved = 2458, peak = 2499;
+
+RUN-1002 : start command "report_qor -step gate -file gate.qor"
+RUN-1002 : start command "start_timer"
+TMR-2502 : Net delay update with mode: Synthesized
+-----------------------------------------------------------
+| QoR metrics               |         value               |
+-----------------------------------------------------------
+| Timing                    |                             |
+|     Setup WNS             |       -19958                |
+|     Setup TNS             |     -9524576                |
+|     Num of violated S-EP  |          512                |
+-----------------------------------------------------------
+| Utilization               |                             |
+|     #registers            |         5749                |
+|     #luts                 |        16111                |
+|     #lutxs                |          446                |
+|     #lut1                 |            9                |
+|     #lut1(~A)             |            9                |
+|     #RAMs                 |           16                |
+|     #DSPs                 |            8                |
+|     #f7mux                |        0.06%                |
+|     #carry4               |        0.18%                |
+|     #MACROs               |           56                |
+|     #insts in MACRO       |          819                |
+-----------------------------------------------------------
+| kept_net                  |                             |
+|     #syn_keep             |          247                |
+|     #keep_hier            |            0                |
+|     #dont_touch           |            0                |
+|     #mark_debug           |            0                |
+|     #max_fanout_keep      |            0                |
+|     #async_reg            |            0                |
+-----------------------------------------------------------
+| Top 1% datanet fanout#    |        66.62                |
+| dff(single fanout)->dff   |          884                |
+| dff(single fanout)->dram  |            0                |
+-----------------------------------------------------------
+| Over-quota path num*      |                             |
+|     tl_clk_user           |          512                |
+|     Total Number          |          512                |
+|     Total Level Slack     |       -20688                |
+|     Worst Level Slack     |          -42                |
+-----------------------------------------------------------
+| Rent**                    |                             |
+|     u_ph2_pcie_ep_subs... |         0.77                |
+-----------------------------------------------------------
+Note*: Over-quota path shows the over-path-level-threshold path number of each clock.
+       The clock will not be shown if no path is with path level over the threshold.
+       The threshold is defined as worst path_margin / 500ps.
+Note**: Rent shows the rent exponent value of the modules whose rent value exceeds the threshold.
+        Only modules under top are reported, and the threshold is defined as 0.7.
+
+Over-quota Path Details
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     Clock     |  Index  |  Budget(Period)  |  Level(Quota)  |                                                                                                                                                                                Cell Type List                                                                                                                                                                                 |  Reason  |  Slack   
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  tl_clk_user  |    1    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT3,LUT6,LUT6,SEQ  |  normal  |  -17459  
+               |    2    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT2,LUT6,LUT6,SEQ  |  normal  |  -17459  
+               |    3    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT2,LUT6,LUT6,SEQ  |  normal  |  -17459  
+               |    4    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT2,LUT6,LUT6,SEQ  |  normal  |  -17459  
+               |    5    |   12364(12500)   |     66(25)     |  SEQ,LUTX,CARRY4,LUTX,LUT5,LUT6,LUT4,LUT5,LUT5,LUT6,LUT5,LUT3,LUT6,LUT5,LUT6,LUT5,LUT6,LUT5,LUT2,LUT5,LUT6,LUT6,LUT2,LUT5,DSPSIOU,DSPMULT,DSPSIOU,LUT6,LUT3,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT6,LUT3,LUT3,LUT5,LUT5,LUT2,LUT4,LUT6,LUT6,LUT2,LUT5,LUT6,LUT3,LUT6,LUT4,LUT6,LUT3,LUT5,LUT6,LUT4,LUT3,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,LUT6,LUT5,LUT5,LUT3,LUT5,LUT2,LUT6,LUT6,SEQ  |  normal  |  -17459  
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Note: Table only show top 5 paths for each clock group in default
+
+Logic Level Distribution
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  Clock                                                                             |  Period            |  0     |  1    |  2     |  3    |  4    |  5    |  6     |  7    |  8    |  9   |  10  |  11   |  12  |  13  |  14    |  >=30
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  sys_clk                                                                           |  40.000ns (25MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  tl_clk_user                                                                       |  12.500ns (80MHz)  |  6551  |  388  |  855   |  331  |  130  |  384  |  1444  |  223  |  238  |  92  |  25  |  194  |  28  |  45  |  1261  |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.pcs0_ick_pma_tx0_block  |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.pl_pclk_phy0_ln0        |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.pl_pclk_user            |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.tl_clk_dpll             |  12.500ns (80MHz)  |  53    |  0    |  0     |  0    |  530  |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top.tl_clk_user             |  12.500ns (80MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u2_ph2_pcie_ep_subsystem_phy0_top.ock_tx0_block           |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u2_ph2_pcie_ep_subsystem_phy0_top.ock_tx1_block           |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u2_ph2_pcie_ep_subsystem_phy0_top.ock_tx2_block           |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  u_ph2_pcie_ep_subsystem/u2_ph2_pcie_ep_subsystem_phy0_top.ock_tx3_block           |  8.000ns (125MHz)  |  0     |  0    |  0     |  0    |  0    |  0    |  0     |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  uart_clk                                                                          |  20.000ns (50MHz)  |  2153  |  280  |  211   |  301  |  123  |  73   |  22    |  0    |  0    |  0   |  0   |  0    |  0   |  0   |  0     |  18944
+  Total                                                                             |  NA                |  8757  |  668  |  1066  |  632  |  783  |  457  |  1466  |  223  |  238  |  92  |  25  |  194  |  28  |  45  |  1261  |  18944
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Note: The table count the worst 100000 paths, each endpoint count only one time.(34879 paths analyzed)
+
+Hierarchical Rent Exponent Report
++------------------------------------------------------------------------------------------+
+|Inst                      |Model                   |Rent     |Cell     |Pin     |Term     |
++------------------------------------------------------------------------------------------+
+|top                       |ph2_pcie_ep_top         |0.09     |23099    |117784  |13       |
+|  u_ph2_pcie_ep_subsystem |ph2_pcie_ep_subsystem_7 |0.77     |2276     |11605   |1890     |
+|  u_pcie_uart             |pcie_uart_6             |0.58     |1197     |5082    |267      |
+|  u_pcie_ep_engine        |pcie_ep_engine_2        |0.57     |11120    |59348   |1078     |
+|  u_pcie_ep_image_dma     |pcie_ep_image_dma_3     |0.57     |7071     |36357   |799      |
++------------------------------------------------------------------------------------------+
+Note: Cell represents total number of cells inside module; Pin represents total number of pins
+      which have net connection inside module; Term represents total number of PIs and POs of module.
+      Rent represents the relationship between number of terms and number of cells in module.
+      A module with higher rent corresponds to highly connected logic and strong connectivity with others.
+Report gate stage QoR done.
+
+RUN-0008 : Do critical warning check and 0 issue(s) found.
+RUN-0008 : Do timing check and 2 issue(s) found.
+RUN-0008 : Do area check and 2 issue(s) found.
+QoR Evaluation
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+  ID        |  Priority  |  Description                                                     |  Suggestion
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+  QOR-1002  |  HIGH      |  - 512 over-quota path exist.                                    |  - Try following setting to reduce over-quota:
+            |            |                                                                  |      set_param gate map_mode logic_level_prior
+            |            |                                                                  |      set_param gate map_strategy 3(*)
+            |            |                                                                  |      set_param place logic_level_opt on
+            |            |                                                                  |  
+  QOR-3100  |  HIGH      |  - Long carry chain on over quota path, which may introduce lar  |  - Try to use directive "use_ripple = 0" to break the carry cha
+            |            |    ge data path delay.                                           |    in.
+            |            |                                                                  |  
+  QOR-3102  |  MEDIUM    |  - There are 1 slack insensitive huge fanout net(s).             |  - Try to infer these huge fanout net(s) up to clock network:
+            |            |                                                                  |      set_param flow hfn_to_clock 3600
+            |            |                                                                  |      set_param flow hfn_to_clock_slack_threshold 10900
+            |            |                                                                  |  
+  QOR-1001  |  LOW       |  - Gate timing is too bad, SWNS -19958ps and STNS -9524576ps.    |  - Try following setting to improve timing:
+            |            |                                                                  |      set_param gate map_mode logic_level_prior
+            |            |                                                                  |      set_param gate map_strategy 3(*)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Note* (*) means this parameter has been set already.
+      (+) means this parameter has been set, suggest to upgrade higher effort level.
+Note** plesae resolve priority MUST FIX and HIGH issues firstly
+       because these have highly possible to block the timing convergence even stop the flow.
+Note*** some suggested settings are not suitable to use together
+        take care of using them separately if suggestion mentioned.
+SYN-1001 : The design has 64 dangling syn_keep insts.
+RUN-1003 : finish command "report_qor -step gate -file gate.qor" in  5.260027s wall, 5.265625s user + 0.000000s system = 5.265625s CPU (100.1%)
+
+RUN-1004 : used memory is 2394 MB, reserved memory is 2458 MB, peak memory is 2499 MB
+RUN-1002 : start command "report_area -file ph2_pcie_ep_top_gate.area"
+SYN-1001 : The design has 446 MAP_LUT6X models, used 0 CARRY8 models, used 0 dram lut statistics on the use of ofa and ofb.
+SYN-1001 : The design used 0 dynamic shifter luts and 0 static shifter luts
+RUN-1001 : standard
+***Report Model: ph2_pcie_ep_top Device: PH2A106FLG676***
+
+Design Statistics
+#IO                        22   out of    286    7.69%
+  #input                    5
+  #output                  17
+  #inout                    0
+#lut                    16557
+  #lut1                     9
+  #lut2                  1747
+  #lut3                  3110
+  #lut4                  3111
+  #lut5                  4684
+  #lut6                  3896
+  #lut6p                    0
+#carry4                   112
+#reg                     5749
+  #unit reg              5749
+  #pad reg                  0
+#dram                       0
+#shifter                    0
+#eram                      16
+#fifo                       0
+#dsp                        8
+
+Utilization Statistics
+#unit lut*              13266   out of 246720    5.38%
+  #logic lut*           13266
+  #dram lut                 0
+  #shifter lut              0
+#carry4                   112   out of  61680    0.18%
+#unit reg                5749   out of 493440    1.17%
+  #dff                   5749
+  #latch                    0
+#f7mux                     70   out of 123360    0.06%
+#f8mux                     35   out of  61680    0.06%
+#eram                      16   out of   1200    1.33%
+  #eram20k                 16
+  #fifo20k                  0
+#eram144k                   0   out of    120    0.00%
+#dsp                        8   out of   1800    0.44%
+#pcie                       1   out of      2   50.00%
+#hxt quad                   1   out of      4   25.00%
+#cgmac                      0   out of      2    0.00%
+#ppc                        0   out of      4    0.00%
+#pad                       22   out of    286    7.69%
+#pll                        1   out of      5   20.00%
+#dpll                       0   out of     10    0.00%
+#cbuf                       0   out of     40    0.00%
+#dbuf                       0   out of     20    0.00%
+#sbuf                       1   out of    140    0.71%
+#dbuf_hxt                   0   out of    140    0.00%
+
+* Note! The LUT and Slice count after Optimize-Gate is not the final value, Run Optimize-place for a more realistic count.
+
+RUN-1003 : finish command "report_area -file ph2_pcie_ep_top_gate.area" in  1.094880s wall, 1.093750s user + 0.000000s system = 1.093750s CPU (99.9%)
+
+RUN-1004 : used memory is 2395 MB, reserved memory is 2459 MB, peak memory is 2499 MB
+SYN-1001 : End Stage 2 | Optimize Gate; Time: 138.962132s wall, 138.359375s user + 0.468750s system = 138.828125s CPU (99.9%); Memory(MB): used = 2395, reserved = 2459, peak = 2499;
+
+RUN-1003 : finish command "optimize_gate -packarea ph2_pcie_ep_top_gate.area" in  138.972091s wall, 138.359375s user + 0.468750s system = 138.828125s CPU (99.9%)
+
+RUN-1004 : used memory is 2395 MB, reserved memory is 2459 MB, peak memory is 2499 MB
+RUN-1002 : start command "legalize_phy_inst"
+SYN-1001 : Stage 3 | Legalize Phy Inst
+SYN-1011 : Flatten model ph2_pcie_ep_top
+SYN-1001 : ADC: Instance "u_ph2_pcie_ep_subsystem/u0_ph2_pcie_ep_subsystem_pcie_top" LOCATION="X147Y0Z0"
+SYN-1001 : ADC: Instance "u_ph2_pcie_ep_subsystem/u2_ph2_pcie_ep_subsystem_phy0_top" LOCATION="X147Y60Z0"
+SYN-1001 : End Stage 3 | Legalize Phy Inst; Time: 0.068821s wall, 0.062500s user + 0.000000s system = 0.062500s CPU (90.8%); Memory(MB): used = 2395, reserved = 2459, peak = 2499;
+
+RUN-1002 : start command "update_timing"
+RUN-1002 : start command "start_timer"
+RUN-1002 : start command "report_timing_status -file ph2_pcie_ep_top_gate.ts"
+RUN-1002 : start command "report_timing_summary -file ph2_pcie_ep_top_gate.timing"
+RUN-1002 : start command "flow_status -file flow.status"
+Location         : C:\Users\ithelp\Desktop\pcie_ph2a-pcie-image-dma\fpga\Design\Prj\case_ep\ph2_pcie_ep_top_Runs\syn_1
+Running with     : Tang Dynasty Release_2026.1_SP1
+                   Copyright (c) 2012-2026 Anlogic Inc.
+Top Model        : ph2_pcie_ep_top
+Device           : PH2A106FLG676
+Speed            : 2
+
+Timing Mode      : basic
+Setup            : WNS -19958ps  TNS -9524576ps  NUM_FEPS   512
+Hold             : WNS 2147483647ps  TNS        0ps  NUM_FEPS     0
+
+Flow Statistics  :
+RUN-1001 : Flow Statistics:
+RUN-1001 : ---------------------------------------------------------------------------------------------------
+RUN-1001 :      command     |  #calls  |  wall time   |  cpu time(s)  |  used memory(mb)  |  peak memory(mb)  
+RUN-1001 : ---------------------------------------------------------------------------------------------------
+RUN-1001 :   optimize_gate  |    1     |  2m18s(54%)  |   138(55%)    |       2395        |       2499        
+RUN-1001 :   optimize_rtl   |    1     |  1m45s(41%)  |   105(42%)    |       2296        |       2499        
+RUN-1001 :   import_device  |    1     |   10s(3%)    |     4(1%)     |       1677        |       1677        
+RUN-1001 :     read_adc     |    2     |    0s(0%)    |     0(0%)     |       2133        |       2133        
+RUN-1001 :     read_sdc     |    2     |    0s(0%)    |     0(0%)     |       2133        |       2133        
+RUN-1001 : ---------------------------------------------------------------------------------------------------
+RUN-1001 :       total      |    7     |    4m13s     |      247      |       2395        |       2499        
+RUN-1001 : ---------------------------------------------------------------------------------------------------
+RUN-1002 : start command "export_db ph2_pcie_ep_top_gate.db"
+RUN-1001 : Exported flow parameters
+RUN-1001 : Exported /
+RUN-1001 : Exported libs
+RUN-1001 : Exported entities
+RUN-1001 : Exported ports
+RUN-1001 : Exported pins
+RUN-1001 : Exported instances
+RUN-1001 : Exported nets
+RUN-1001 : Exported buses
+RUN-1001 : Exported models
+RUN-1001 : Exported packer
+RUN-1001 : Exported congestions
+RUN-1001 : Exported violations
+RUN-1001 : Exported ATMR Setting
+RUN-1001 : Exported timing constraints
+RUN-1001 : Exported IO constraints
+RUN-1001 : Exported Inst constraints
+RUN-1001 : Exported ChipWatcher
+RUN-1002 : start command "export_flow_status -s read_design -e opt_gate"
+RUN-1002 : start command "flow_status"
+
+Location         : C:\Users\ithelp\Desktop\pcie_ph2a-pcie-image-dma\fpga\Design\Prj\case_ep\ph2_pcie_ep_top_Runs\syn_1
+Running with     : Tang Dynasty Release_2026.1_SP1
+                   Copyright (c) 2012-2026 Anlogic Inc.
+Top Model        : ph2_pcie_ep_top
+Device           : PH2A106FLG676
+Speed            : 2
+
+Timing Mode      : basic
+Setup            : WNS -19958ps  TNS -9524576ps  NUM_FEPS   512
+Hold             : WNS 2147483647ps  TNS        0ps  NUM_FEPS     0
+
+RUN-1001 : Flow Statistics:
+RUN-1001 : ---------------------------------------------------------------------------------------------------
+RUN-1001 :      command     |  #calls  |  wall time   |  cpu time(s)  |  used memory(mb)  |  peak memory(mb)  
+RUN-1001 : ---------------------------------------------------------------------------------------------------
+RUN-1001 :   optimize_gate  |    1     |  2m18s(54%)  |   138(55%)    |       2395        |       2499        
+RUN-1001 :   optimize_rtl   |    1     |  1m45s(41%)  |   105(42%)    |       2296        |       2499        
+RUN-1001 :   import_device  |    1     |   10s(3%)    |     4(1%)     |       1677        |       1677        
+RUN-1001 :     read_adc     |    2     |    0s(0%)    |     0(0%)     |       2133        |       2133        
+RUN-1001 :     read_sdc     |    2     |    0s(0%)    |     0(0%)     |       2133        |       2133        
+RUN-1001 : ---------------------------------------------------------------------------------------------------
+RUN-1001 :       total      |    7     |    4m13s     |      247      |       2395        |       2499        
+RUN-1001 : ---------------------------------------------------------------------------------------------------

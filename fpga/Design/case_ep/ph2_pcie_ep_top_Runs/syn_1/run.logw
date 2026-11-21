@@ -1,0 +1,100 @@
+============================================================
+   TD Release_2026.1_SP1
+   Copyright (c) 2012-2026 Anlogic Inc.
+   Executable = C:/Anlogic/TD_Release_2026.1_SP1.198.412/bin/run.exe
+   Build number = 6.2.2.198412
+   Built at =   16:15:53 Apr 23 2026
+   Run by =     ithelp
+   Run Date =   Sat Nov 21 08:54:19 2026
+
+   Run on =     SHL-BCVQFS3
+============================================================
+HDL-5317 WARNING: input port 'wakeup' is not connected on this instance in ../../al_ip/pcie_pll_ep.v(91)
+HDL-5007 WARNING: actual bit length 4 differs from formal bit length 8 for port 'pcie_lane_enable' in ../../al_ip/ph2_pcie_ep_subsystem.v(1247)
+HDL-5343 WARNING: system task 'display' is ignored for synthesis in ../../al_ip/ph2_pcie_ep_subsystem.v(3287)
+HDL-5343 WARNING: system task 'display' is ignored for synthesis in ../../al_ip/ph2_pcie_ep_subsystem.v(3581)
+HDL-5343 WARNING: system task 'display' is ignored for synthesis in ../../al_ip/ph2_pcie_ep_subsystem.v(4403)
+HDL-5314 WARNING: net 'mem_csr_data' does not have a driver in ../../al_ip/ph2_pcie_ep_subsystem.v(3039)
+HDL-5317 WARNING: input port 'phy1_pclk_max' is not connected on this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1041)
+HDL-5317 WARNING: input port 'ick_ref_cml_ls_b2t_n[1]' is not connected on this instance in ../../al_ip/ph2_pcie_ep_subsystem.v(1734)
+HDL-5007 WARNING: actual bit length 8 differs from formal bit length 4 for port 'pcie_rx_p' in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(307)
+HDL-5007 WARNING: actual bit length 8 differs from formal bit length 4 for port 'pcie_rx_n' in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(308)
+HDL-5007 WARNING: actual bit length 8 differs from formal bit length 4 for port 'pcie_tx_p' in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(309)
+HDL-5007 WARNING: actual bit length 8 differs from formal bit length 4 for port 'pcie_tx_n' in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(310)
+HDL-5314 WARNING: net 'hxt_phy1_pready' does not have a driver in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(239)
+HDL-5314 WARNING: net 'hxt_phy1_prdata[31]' does not have a driver in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(240)
+HDL-5314 WARNING: net 'hxt_phy1_pslverr' does not have a driver in ../../../../Rtl/ep_side/ph2_pcie_ep_top.v(241)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[31]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[31]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[30]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[30]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[29]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[29]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[28]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[28]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[27]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[27]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[26]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[26]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[25]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[25]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[24]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[24]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[23]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[23]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[22]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[22]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[21]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[21]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[20]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[20]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[19]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[19]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[18]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[18]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[17]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[17]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[16]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[16]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[15]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[15]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[14]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[14]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[13]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[13]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[12]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[12]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[11]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[11]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[10]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[10]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[9]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[9]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[8]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[8]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[7]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[7]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[6]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[6]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[5]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[5]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[4]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[4]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[3]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[3]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[2]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[2]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[1]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[1]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_prdata[0]" in ../../../../Rtl/common/ubus2phy_apb.v(42)
+		the net's pin: pin "i1[0]" in ../../../../Rtl/common/ubus2phy_apb.v(127)
+SYN-5013 WARNING: Undriven net: model "ph2_pcie_ep_top" / net "u_ep_ubus_bridge/u_phy1_ubus2apb/tl_cfg_pready" in ../../../../Rtl/common/ubus2phy_apb.v(41)
+		the net's pin: pin "I[0]" in ../../../../Rtl/common/ubus2phy_apb.v(70)
+SYN-5025 WARNING: Using 0 for all undriven pins and nets
+SYN-6021 CRITICAL-WARNING: 8 out of 22 logical ports has no user assigned specific location constraint.
+                           This may affect performance or in some cases cause damage to the device!
+                           Bitgen will abort. If insist on bitgen with risk, please 'set_param bitgen unconstr_io on' to avoid bitgen error.
+                           No ADC ports: pcie_tx_n[7], pcie_tx_n[6], pcie_tx_n[5], pcie_tx_n[4], pcie_tx_p[7], pcie_tx_p[6], pcie_tx_p[5], pcie_tx_p[4].
+                           No ADC ports will be assigned to random location as below:
+                           pcie_tx_n[7]:AE26, pcie_tx_n[6]:AF17, pcie_tx_n[5]:W26, pcie_tx_n[4]:M21, pcie_tx_p[7]:H22, pcie_tx_p[6]:G19, pcie_tx_p[5]:AD15, pcie_tx_p[4]:D10.
+SYN-6577 WARNING: The clock signal "tl_clk_user" is added with the synthetic instruction (keep/mark_debug/dont_touch/max_fanout), which may create additional logic on this net

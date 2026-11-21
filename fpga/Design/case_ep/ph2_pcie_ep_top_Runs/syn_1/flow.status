@@ -1,0 +1,23 @@
+Location         : C:\Users\ithelp\Desktop\pcie_ph2a-pcie-image-dma\fpga\Design\Prj\case_ep\ph2_pcie_ep_top_Runs\syn_1
+Running with     : Tang Dynasty Release_2026.1_SP1
+                   Copyright (c) 2012-2026 Anlogic Inc.
+Top Model        : ph2_pcie_ep_top
+Device           : PH2A106FLG676
+Speed            : 2
+
+Timing Mode      : basic
+Setup            : WNS -19958ps  TNS -9524576ps  NUM_FEPS   512
+Hold             : WNS 2147483647ps  TNS        0ps  NUM_FEPS     0
+
+Flow Statistics  :
+---------------------------------------------------------------------------------------------------
+     command     |  #calls  |  wall time   |  cpu time(s)  |  used memory(mb)  |  peak memory(mb)  
+---------------------------------------------------------------------------------------------------
+  optimize_gate  |    1     |  2m18s(54%)  |   138(55%)    |       2395        |       2499        
+  optimize_rtl   |    1     |  1m45s(41%)  |   105(42%)    |       2296        |       2499        
+  import_device  |    1     |   10s(3%)    |     4(1%)     |       1677        |       1677        
+    read_adc     |    2     |    0s(0%)    |     0(0%)     |       2133        |       2133        
+    read_sdc     |    2     |    0s(0%)    |     0(0%)     |       2133        |       2133        
+---------------------------------------------------------------------------------------------------
+      total      |    7     |    4m13s     |      247      |       2395        |       2499        
+---------------------------------------------------------------------------------------------------

@@ -1,0 +1,2 @@
+HDL-5007 WARNING: The file ../../Rtl/common/PCIE_REG_TABLE.v will not be compiled since it is not included by any other files. Set it as 'global include' if it should be compiled.
+PRJ-5303 WARNING: Run phy_1 failed.
