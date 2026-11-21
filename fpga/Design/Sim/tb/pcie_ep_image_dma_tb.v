@@ -19,6 +19,7 @@ module pcie_ep_image_dma_tb;
     integer completion_packets = 0;
     reg [31:0] completion_payload = 32'd0;
     reg [511:0] stalled_data = 512'd0;
+    integer coordinate;
 
     always #5 clk = ~clk;
 
@@ -62,8 +63,8 @@ module pcie_ep_image_dma_tb;
             rx_data[489:480] = 10'd1;
             rx_data[479:464] = 16'h0100;
             rx_data[455:448] = 8'hff;
-            rx_data[447:416] = 32'd0;
-            rx_data[415:386] = offset[31:2];
+            rx_data[447:416] = 32'h0000_0023;
+            rx_data[415:384] = 32'habc0_0000 + offset;
             rx_data[383:352] = value;
             rx_sop = 1'b1;
             rx_eop = 1'b1;
@@ -89,17 +90,44 @@ module pcie_ep_image_dma_tb;
             rx_data[479:464] = 16'h0100;
             rx_data[463:456] = 8'h55;
             rx_data[451:448] = 4'hf;
-            rx_data[447:416] = 32'd0;
-            rx_data[415:386] = offset[31:2];
+            rx_data[447:416] = 32'h0000_0023;
+            rx_data[415:384] = 32'habc0_0000 + offset;
             rx_sop = 1'b1;
             rx_eop = 1'b1;
-            rx_valid = 16'he000;
+            rx_valid = 16'hf000;
             @(negedge clk);
             rx_bardec = 48'd0;
             rx_data = 512'd0;
             rx_sop = 1'b0;
             rx_eop = 1'b0;
             rx_valid = 16'd0;
+        end
+    endtask
+
+    task access_bar2_32;
+        input write_access;
+        input [31:0] offset;
+        input [31:0] value;
+        begin
+            @(negedge clk);
+            rx_bardec = 48'h4;
+            rx_data = 512'd0;
+            rx_data[511:509] = write_access ? 3'b010 : 3'b000;
+            rx_data[489:480] = 10'd1;
+            rx_data[479:464] = 16'h0100;
+            rx_data[463:456] = 8'h56;
+            rx_data[451:448] = 4'hf;
+            rx_data[447:416] = 32'habc0_0000 + offset;
+            rx_data[415:384] = value;
+            rx_sop = 1'b1;
+            rx_eop = 1'b1;
+            rx_valid = write_access ? 16'hf000 : 16'he000;
+            @(negedge clk);
+            rx_bardec = 0;
+            rx_data = 0;
+            rx_sop = 0;
+            rx_eop = 0;
+            rx_valid = 0;
         end
     endtask
 
@@ -185,6 +213,24 @@ module pcie_ep_image_dma_tb;
                      dut.pixel_dword(1919, 0, 2, 0));
             $fatal(1);
         end
+        for (coordinate = 0; coordinate < 2048; coordinate = coordinate + 1) begin
+            if (dut.pixel_component(3'd1, coordinate, 0, 0) !==
+                ((coordinate * 255 / 1919) & 255) ||
+                dut.pixel_component(3'd3, 0, coordinate, 1) !==
+                ((coordinate * 255 / 1079) & 255) ||
+                dut.checker_half(coordinate) !== ((coordinate / 120) & 1)) begin
+                $display("FAIL: pixel arithmetic at %0d", coordinate);
+                $fatal(1);
+            end
+        end
+        access_bar2_32(1'b1, 32'h00c, 32'd5);
+        access_bar2_32(1'b0, 32'h00c, 32'd0);
+        wait (completion_packets == 1);
+        if (completion_payload !== 32'd5) begin
+            $display("FAIL: 3DW BAR2 access with nonzero base");
+            $fatal(1);
+        end
+        access_bar2_32(1'b1, 32'h00c, 32'd0);
         write_bar2(32'h020, 32'h1234_5ff0);
         write_bar2(32'h024, 32'h0000_0001);
         write_bar2(32'h028, 32'h1234_6000);
@@ -214,10 +260,16 @@ module pcie_ep_image_dma_tb;
         end
 
         read_bar2(32'h038);
-        wait (completion_packets == 1);
+        wait (completion_packets == 2);
         if (completion_payload !== 32'd80) begin
             $display("FAIL: BAR2 completion data mismatch: %h",
                      completion_payload);
+            $fatal(1);
+        end
+        read_bar2(32'h1038);
+        wait (completion_packets == 3);
+        if (completion_payload !== 32'd0) begin
+            $display("FAIL: BAR2 register decode aliased outside register block");
             $fatal(1);
         end
 

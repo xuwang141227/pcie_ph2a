@@ -95,6 +95,10 @@ module pcie_ep_image_dma #(
     reg packet_ready;
     reg [4:0] packet_generate_word;
     reg [511:0] packet_payload;
+    reg [31:0] pixel_word_pipeline;
+    reg [4:0] pixel_word_index;
+    reg pixel_word_valid;
+    reg pixel_word_last;
     reg [1:0] posted_credit_delay;
     reg [31:0] tx_packet_bytes;
     reg [4:0] tx_packet_dwords;
@@ -110,8 +114,8 @@ module pcie_ep_image_dma #(
     wire [3:0] rx_last_be = tl_rx_data[455:452];
     wire [31:0] rx_bar2_offset = (rx_fmt == `MWR_FMT_4DW ||
                                   rx_fmt == `MRD_FMT_4DW)
-                               ? {2'd0, tl_rx_data[415:386], 2'b00}
-                               : {2'd0, tl_rx_data[447:418], 2'b00};
+                               ? {12'd0, tl_rx_data[403:386], 2'b00}
+                               : {12'd0, tl_rx_data[435:418], 2'b00};
     wire [31:0] rx_bar2_write_data =
         (rx_fmt == `MWR_FMT_4DW) ? tl_rx_data[383:352] : tl_rx_data[415:384];
     wire [15:0] rx_requester = tl_rx_data[479:464];
@@ -149,11 +153,11 @@ module pcie_ep_image_dma #(
         buffer0_armed && buffer1_armed ? next_slot : !buffer0_armed;
     wire [4:0] packet_dwords = packet_bytes[6:2];
     wire [4:0] first_beat_dwords =
-        packet_dwords > 5'd12 ? 5'd12 : packet_dwords;
+        tx_packet_dwords > 5'd12 ? 5'd12 : tx_packet_dwords;
     wire [15:0] first_beat_valid =
         16'hffff << (16 - (4 + first_beat_dwords));
     wire [4:0] posted_data_credits_needed =
-        (packet_dwords + 5'd3) >> 2;
+        (tx_packet_dwords + 5'd3) >> 2;
     wire [4:0] completion_data_credits_needed = 5'd1;
     wire can_send_posted =
         (tl_tx_credits[15] ||
@@ -167,16 +171,26 @@ module pcie_ep_image_dma #(
     assign tl_tx_stream = 1'b0;
     assign irq_pending = |(interrupt_status & interrupt_enable);
 
+    function checker_half;
+        input [10:0] coordinate;
+        integer threshold;
+        begin
+            checker_half = 1'b0;
+            for (threshold = 120; threshold <= 2040; threshold = threshold + 120)
+                checker_half = checker_half ^ (coordinate >= threshold);
+        end
+    endfunction
+
     function [7:0] pixel_component;
         input [2:0] pattern;
         input [10:0] x;
         input [10:0] y;
         input [1:0] component;
-        reg [18:0] scaled_value;
+        reg [28:0] scaled_value;
         reg [7:0] value;
         begin
             value = 8'd0;
-            scaled_value = 19'd0;
+            scaled_value = 29'd0;
             case (pattern)
                 3'd0: begin
                     case (component)
@@ -193,19 +207,20 @@ module pcie_ep_image_dma #(
                     endcase
                 end
                 3'd1: begin
-                    scaled_value = {8'd0, x} * 19'd255;
-                    value = scaled_value / 19'd1919;
+                    // Exact floor(coordinate * 255 / dimension) for 11-bit coordinates.
+                    scaled_value = x * 18'd139337;
+                    value = scaled_value >> 20;
                 end
                 3'd2:
-                    value = (((x / 11'd120) + (y / 11'd120)) & 1)
+                    value = (checker_half(x) ^ checker_half(y))
                             ? 8'd0 : 8'hff;
                 3'd3: begin
                     if (component == 2'd0) begin
-                        scaled_value = {8'd0, x} * 19'd255;
-                        value = scaled_value / 19'd1919;
+                        scaled_value = x * 18'd139337;
+                        value = scaled_value >> 20;
                     end else if (component == 2'd1) begin
-                        scaled_value = {8'd0, y} * 19'd255;
-                        value = scaled_value / 19'd1079;
+                        scaled_value = y * 17'd123905;
+                        value = scaled_value >> 19;
                     end else
                         value = 8'd128;
                 end
@@ -323,6 +338,10 @@ module pcie_ep_image_dma #(
             packet_ready <= 1'b0;
             packet_generate_word <= 5'd0;
             packet_payload <= 512'd0;
+            pixel_word_pipeline <= 32'd0;
+            pixel_word_index <= 5'd0;
+            pixel_word_valid <= 1'b0;
+            pixel_word_last <= 1'b0;
             posted_credit_delay <= 2'd0;
             tx_packet_bytes <= 32'd0;
             tx_packet_dwords <= 5'd0;
@@ -481,17 +500,19 @@ module pcie_ep_image_dma #(
                 posted_credit_delay <= posted_credit_delay - 1'b1;
 
             if (frame_busy && dma_running && !packet_generate &&
-                !packet_ready && !tx_pending) begin
+                !pixel_word_valid && !packet_ready && !tx_pending) begin
                 tx_packet_bytes <= packet_bytes;
                 tx_packet_dwords <= packet_dwords;
                 packet_generate_word <= 5'd0;
                 packet_generate <= 1'b1;
             end
 
+            pixel_word_valid <= packet_generate;
             if (packet_generate) begin
-                packet_payload[511 - packet_generate_word*32 -: 32] <=
-                    pixel_dword(pixel_x, pixel_y,
-                                pixel_component_offset, current_pattern);
+                pixel_word_pipeline <= pixel_dword(pixel_x, pixel_y,
+                                                  pixel_component_offset, current_pattern);
+                pixel_word_index <= packet_generate_word;
+                pixel_word_last <= packet_generate_word + 1'b1 == tx_packet_dwords;
                 pixel_component_offset <= pixel_component_offset == 2'd2
                                         ? 2'd0
                                         : pixel_component_offset + 1'b1;
@@ -502,9 +523,13 @@ module pcie_ep_image_dma #(
                     pixel_x <= pixel_x_advanced[10:0];
                 if (packet_generate_word + 1'b1 == tx_packet_dwords) begin
                     packet_generate <= 1'b0;
-                    packet_ready <= 1'b1;
                 end else
                     packet_generate_word <= packet_generate_word + 1'b1;
+            end
+            if (pixel_word_valid) begin
+                packet_payload[511 - pixel_word_index*32 -: 32] <= pixel_word_pipeline;
+                if (pixel_word_last)
+                    packet_ready <= 1'b1;
             end
 
             if (tx_pending && !tl_tx_wait) begin
@@ -576,9 +601,9 @@ module pcie_ep_image_dma #(
                     tl_tx_data <= {
                         `MWR_FMT_4DW, `MWR_TYPE, 1'b0, 3'b000, 1'b0, 1'b0,
                         1'b0, 1'b0, 1'b0, 1'b0, 2'b00, 2'b00,
-                        {5'd0, packet_dwords},
+                        {5'd0, tx_packet_dwords},
                         {tl_cfg_busdev, 3'b000}, 8'd0,
-                        (packet_dwords > 5'd1 ? 4'hf : 4'h0), 4'hf,
+                        (tx_packet_dwords > 5'd1 ? 4'hf : 4'h0), 4'hf,
                         current_dma_address[63:32],
                         current_dma_address[31:2], 2'b00,
                         packet_payload[511:128]
@@ -587,9 +612,10 @@ module pcie_ep_image_dma #(
                     tx_is_dma <= 1'b1;
                     tx_pending <= 1'b1;
                     tx_phase <= 1'b0;
-                    tl_tx_eop <= packet_dwords <= 5'd12;
+                    tl_tx_eop <= tx_packet_dwords <= 5'd12;
                 end
-                if (completion_pending || (frame_busy && dma_running)) begin
+                if (completion_pending ||
+                    (frame_busy && dma_running && packet_ready)) begin
                     tl_tx_sop <= 1'b1;
                 end
             end

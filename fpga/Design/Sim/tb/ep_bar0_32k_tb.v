@@ -95,6 +95,54 @@ module ep_bar0_32k_tb;
         end
     endtask
 
+    task send_write_64;
+        input [63:0] address;
+        input [31:0] data;
+        begin
+            @(negedge clk);
+            rx_bardec = 48'h1;
+            rx_data = 512'd0;
+            rx_data[511:509] = 3'b011;
+            rx_data[489:480] = 10'd1;
+            rx_data[451:448] = 4'hf;
+            rx_data[447:384] = address;
+            rx_data[383:352] = data;
+            rx_sop = 1'b1;
+            rx_eop = 1'b1;
+            rx_valid = 16'hf800;
+            @(negedge clk);
+            rx_bardec = 0;
+            rx_data = 0;
+            rx_sop = 0;
+            rx_eop = 0;
+            rx_valid = 0;
+        end
+    endtask
+
+    task send_read_64;
+        input [63:0] address;
+        begin
+            @(negedge clk);
+            rx_bardec = 48'h1;
+            rx_data = 512'd0;
+            rx_data[511:509] = 3'b001;
+            rx_data[489:480] = 10'd2;
+            rx_data[479:464] = 16'h0100;
+            rx_data[463:456] = 8'h24;
+            rx_data[455:448] = 8'hff;
+            rx_data[447:384] = address;
+            rx_sop = 1'b1;
+            rx_eop = 1'b1;
+            rx_valid = 16'hf000;
+            @(negedge clk);
+            rx_bardec = 0;
+            rx_data = 0;
+            rx_sop = 0;
+            rx_eop = 0;
+            rx_valid = 0;
+        end
+    endtask
+
     task send_write_20dw;
         input [31:0] address;
         integer lane;
@@ -218,7 +266,7 @@ module ep_bar0_32k_tb;
         send_write_2dw(32'h0000_7ff8, 32'h1234_5678, 32'h89ab_cdef);
         repeat(8) @(negedge clk);
 
-        send_read_2dw(32'h0000_7ff8);
+        send_read_64(64'h0000_0001_0000_03f8);
         wait(tx_sop);
         #1;
         if(tx_data[511:509] !== 3'b010 ||
@@ -241,9 +289,9 @@ module ep_bar0_32k_tb;
         end
 
         wait(!tx_sop);
-        send_write_20dw(32'h0000_0100);
+        send_write_20dw(32'h0000_03e0);
         repeat(8) @(negedge clk);
-        send_read_20dw(32'h0000_0100);
+        send_read_20dw(32'h0000_07e0);
         wait(tx_sop);
         #1;
         if(tx_eop) begin
@@ -268,9 +316,11 @@ module ep_bar0_32k_tb;
         end
 
         wait(!tx_eop);
+        send_write_64(64'h0000_0001_0000_4500, 32'ha000_0000);
+        repeat(8) @(negedge clk);
         send_write_1byte(32'h0000_0100, 32'hdead_beef);
         repeat(8) @(negedge clk);
-        send_read_1byte(32'h0000_0100);
+        send_read_1byte(32'h0000_7d00);
         wait(tx_sop);
         #1;
         if(tx_data[415:384] !== 32'ha0ad_0000 ||
@@ -280,7 +330,7 @@ module ep_bar0_32k_tb;
             $fatal(1);
         end
 
-        $display("PASS: BAR0 bounds, multi-beat access, and byte enables verified");
+        $display("PASS: BAR0 1 KiB aliasing, wrap, 64-bit writes and byte enables");
         $finish;
     end
 

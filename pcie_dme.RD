@@ -11,9 +11,9 @@
 
 ## 2. 当前基础与约束
 
-- `README.md` 说明当前覆盖工程 BAR0 为 32 KiB，非预取 32 位 Memory BAR，设备 ID 为 `1edb:abcd`。现有 `tools/bar0_gui.py` 是 Ubuntu 下直接映射 BAR0 的读写界面，不提供 DMA 内存分配或中断等待。
+- BAR0 为 32 KiB 非预取 32 位 Memory BAR，内部 1 KiB RAM 以低 10 位地址循环镜像，设备 ID 为 `1edb:abcd`。`tools/bar0_gui.py` 直接映射 BAR0，不提供 DMA 内存分配或中断等待。
 - `config/Clipboard_Screenshot-3.png` 的 Interrupt 页面选中 **Legacy**、PF0 **INTA**，MSI 和 MSI-X 未选中；`fpga/Design/Rtl/common/ph2_pcie_case_param.v` 也启用 Legacy。故本方案使用 Legacy INTA，不要求切换 IP 中断模式。
-- `config/PF.png` 显示 BAR0 为 32 KiB、BAR2 为 1 MiB 32-bit 非预取 Memory BAR，PF0 class code 为 `0x078000`；`config/Clipboard_Screenshot-5.png` 显示 Gen2 ×4、80 MHz。当前 `.ipc` 和生成的 PCIe wrapper 按这些配置同步；最终 BAR 资源仍以板卡实际枚举结果为准。
+- `config/PF.png` 显示 BAR0 为 32 KiB、BAR1 为 256 字节 I/O、BAR2 为 1 MiB 64-bit 非预取 Memory BAR、BAR4 为 1 MiB 64-bit 预取 Memory BAR，PF0 class code 为 `0x040000`；`config/basic.png` 显示 Gen2 ×4、80 MHz。当前工程 `.ipc` 和 PCIe wrapper 已同步；最终 BAR 资源仍以板卡实际枚举结果为准。
 - 现有 EP engine 主要处理主机发起的 BAR 事务和响应；此方案需要新增 EP 主动发起 Memory Write 的 DMA 逻辑，不能把现有 BAR 读写当作 DMA。仓库原厂驱动压缩包包含 DMA/事件相关代码，但与本方案硬件寄存器协议是否兼容尚未确认，不假设可直接使用。
 - PCIe IP 按 **Gen2 ×4** 配置，`tl_clk_user` 为 **80 MHz**。PCIe 链路速率与 FPGA 用户时钟频率是独立配置；代码使用 80,000,000 个用户时钟周期作为 1 秒帧节拍。DMA 仍读取 `tl_cfg_current_link_speed`、`tl_cfg_negotiated_width`、`tl_cfg_max_payload_size` 并以运行时值拆分 TLP。Gen2 ×4 对约 6.22 MB/s 的帧数据带宽充足，但仍须验证实际链路、TLP 流控和主机处理延迟。
 - UG1112 1.2（2026.09）确认 EP 用户 TX 是 512-bit 接口，TLP Header Byte0 对应 `tl_tx_data[511:504]`，DW 内字节先高位后低位。`tl_tx_valid` 非末拍必须全 1、末拍标明有效 DW；`tl_tx_wait` 可在报文任意位置拉高，拉高期间所有发送输入须保持稳定。不得等 `tl_tx_wait==0` 后才开始新报文：`tl_tx_sop` 发起报文、`tl_tx_wait` 对传输施加反压。posted header/data credit 分别见 `tl_tx_credits[31:0]`；credit 更新有两个 `tl_clk_user` 周期延迟，应按手册信用规则和 IP 行为实现，不能只依赖 wait。
@@ -44,12 +44,12 @@ Python Tk 界面（开始/停止/图案选择、画面和日志）
 Linux PCI 驱动（BAR2 控制、双 DMA 缓冲区、INTA 处理）
           │ PCIe：控制寄存器 / Memory Write / Legacy INTA
 PH2A EP：BAR2 寄存器 + DMA 发送仲裁 + 图案发生器
-          └─ 现有 BAR0 32 KiB 存储读写路径保留
+          └─ BAR0 32 KiB 窗口镜像至 1 KiB 测试存储
 ```
 
 选择 **EP 主动写主机内存**（C2H）：驱动通过 Linux DMA API 分配缓冲区，设备只使用 DMA API 返回的 DMA 地址（可能是 IOVA），不使用 Python 虚拟地址或 CPU 物理地址。单帧 DMA 地址空间连续，设备按地址递增发送 PCIe Memory Write；无需 FPGA 侧整帧缓存，只需带背压的像素生成器、打包和小 FIFO。主机按 Ubuntu/Linux 驱动路径设计；驱动、接口和 Python 界面均属于本设计实现范围，不依赖用户提供现成驱动。
 
-方案优先复用原设计的 PCIe IP、链路与 BAR0 配置，将新控制寄存器放到 BAR2。现有 `pcie_ep_engine.v` 的 BAR0 事务路径需扩展 BAR2 命中解码和响应；不改变 BAR0 的 32 KiB 读写语义。禁止同时运行直接访问 BAR2 的其他程序或绑定多个驱动；现有 BAR0 GUI 的独立测试应在 DMA 停止后进行。
+方案复用原设计的 PCIe IP 和链路，将控制寄存器放到 BAR2，BAR0 窗口内每 1 KiB 相互镜像。禁止同时运行直接访问 BAR2 的其他程序或绑定多个驱动；现有 BAR0 GUI 的独立测试应在 DMA 停止后进行。
 
 ## 5. DMA 与帧缓冲
 
@@ -125,14 +125,14 @@ Python 使用 Tkinter 窗口，建议 Pillow 处理 RGB888 和缩放；主线程
 2. **PCIe 事务仿真**：验证 64 位地址、不同 MPS、4 KiB 边界及尾包、TX 仲裁、BAR0 原有读写和 BAR2 寄存器；通过总线模型重建每帧并与软件参考图逐字节比较。
 3. **中断仿真**：帧完成后 Assert、W1C 后 Deassert、双槽 pending、处理时新事件、共享中断及错误路径；验证最后数据写、完成状态和中断的顺序。
 4. **驱动测试**：DMA 分配失败、IOMMU 开关和高于 4 GiB 的 DMA 地址、IRQ 不可用、错误长度、无空槽、进程退出、反复启停、设备移除/超时与资源生命周期；共享 IRQ 非本设备返回 `IRQ_NONE`。
-5. **上板验收**：首先复测原 BAR0 32 KiB 读写；确认 `lspci` 的 BAR、实际链路、Legacy INTA 和 bus master 状态。六图案各连续采集至少 10 帧，按完整 RGB 字节与参考图比较；无丢帧条件下连续运行 10 分钟，检查至少 600 个完成中断与对应完整帧，帧间周期以设备时钟为基准 1.000 秒，目标误差不超过 1%，并记录 Host 接收抖动、丢帧和错误。人为延迟消费验证丢帧策略和无撕裂，运行中切换图案、停止/重启及异常处理均须符合上述协议。
+5. **上板验收**：首先复测 BAR0 32 KiB 窗口的 1 KiB 循环镜像；确认 `lspci` 的 BAR、实际链路、Legacy INTA 和 bus master 状态。六图案各连续采集至少 10 帧，按完整 RGB 字节与参考图比较；无丢帧条件下连续运行 10 分钟，检查至少 600 个完成中断与对应完整帧，帧间周期以设备时钟为基准 1.000 秒，目标误差不超过 1%，并记录 Host 接收抖动、丢帧和错误。人为延迟消费验证丢帧策略和无撕裂，运行中切换图案、停止/重启及异常处理均须符合上述协议。
 
 性能与可靠性以实测为准；无空槽或系统中断被屏蔽时不承诺每秒都能显示一帧。板上图像、IRQ、DMA 安全及时序收敛均需实际验证，不应因目前 BAR0 上板成功而视为已完成。
 
 ## 10. 已知实施基线与验证边界
 
 - PCIe IP 按 Gen2 ×4 配置，Linux 驱动和 Python UI 由本项目新增；工具以仓库已有 Ubuntu GUI 为平台线索。驱动构建需匹配实际运行内核的 headers，实施时通过标准内核接口处理版本差异。
-- 当前配置为 BAR0 32 KiB 32-bit Memory、BAR2 1 MiB 32-bit 非预取 Memory，BAR2 仍通过 PCI resource index 2 访问；BAR2 的 32-bit 属性不要求驱动改用其他 BAR index。PF0 class code 为 `0x078000`，不影响驱动按 `1edb:abcd` 匹配。真实运行 BAR、class code 和训练链路仍须由主机枚举确认，并检查其与 bitstream 一致性。
+- 当前配置为 BAR0 32 KiB 32-bit Memory（内部 1 KiB 镜像）、BAR2 1 MiB 64-bit 非预取 Memory，BAR2 仍通过 PCI resource index 2 访问，BAR3 是其高 32 位。PF0 class code 为 `0x040000`，驱动按 `1edb:abcd` 匹配。真实运行 BAR、class code 和训练链路仍须由主机枚举确认，并检查其与 bitstream 一致性。
 - Host DMA 分配、驱动安装和 UI 是本方案必做工作，不作为要求用户另行提供的功能。硬件 IP 行为通过 UG1112、已有 RTL、可用仿真/测试和板上数据逐步验证；若器件配置或工具模型缺失，则明确标注受限项，不把它们作为已验证事实。
 - 本版固定 RGB888、六种图案、双缓冲；若连续一致性 DMA 缓冲无法分配，当前版本报告错误，不静默降级到 SG。是否另行设计 SG 为后续优化事项，不影响本版协议正确性。
 
@@ -145,4 +145,4 @@ Python 使用 Tkinter 窗口，建议 Pillow 处理 RGB888 和缩放；主线程
 - 新增 `driver/pcie_image_drv.c` / `pcie_image.h`：绑定 `1edb:abcd`、检查 BAR2 ABI、分配两个 coherent DMA buffer、提供 `mmap/poll/ioctl` 和 Legacy IRQ。停止超时时清除 bus mastering 并隔离 buffer，避免释放仍可能被设备访问的内存；该保护不等于验证了设备已被物理隔离。
 - 新增 `tools/pcie_image_gui.py`：Tkinter 开始/停止、图案选择、画面显示和日志；须按 `tools/requirements.txt` 安装 Pillow。日志显示帧序号、图案、长度、协商链路及丢帧计数，不输出至物理串口。
 - 已通过 `fpga/Design/Sim/tb/pcie_ep_image_dma_tb.v` 定向 RTL 仿真，覆盖 BAR2 读写、Memory Write 头/数据、4 KiB 拆包、TX wait 保持、帧元数据/W1C 中断、图案参考像素、双缓冲槽地址轮转，以及 STOP 等待在途帧完成。已通过现有 BAR0 回归、EP 顶层/包装器语法检查和 Python 语法/ioctl ABI 大小检查。
-- 当前未验证：完整端到端 PCIe 仿真、安路综合/时序、Linux 内核模块编译、实际 GUI 与板卡联调、上板 1080p 图像逐字节比对、DMA/INTA 顺序和长时间稳定性。缺少目标内核 headers 与厂商综合/IP 仿真环境时，须将其作为明确的验证阻塞项；不得据此宣称功能已完成。
+- 当前未验证：完整端到端 PCIe 仿真、安路综合/时序、目标内核模块编译、实际 GUI 与板卡联调、上板 1080p 图像逐字节比对、DMA/INTA 顺序和长时间稳定性。缺少目标内核 headers 与厂商综合/IP 仿真环境时，须将其作为明确的验证阻塞项；不得据此宣称功能已完成。

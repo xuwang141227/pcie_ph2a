@@ -75,6 +75,18 @@ function [1:0] first_enabled_byte;
     end
 endfunction
 
+function [4:0] count_dwords;
+    input [15:0] bits;
+    reg [2:0] a, b, c, d;
+    begin
+        a = {2'b0,bits[0]} + {2'b0,bits[1]} + {2'b0,bits[2]} + {2'b0,bits[3]};
+        b = {2'b0,bits[4]} + {2'b0,bits[5]} + {2'b0,bits[6]} + {2'b0,bits[7]};
+        c = {2'b0,bits[8]} + {2'b0,bits[9]} + {2'b0,bits[10]} + {2'b0,bits[11]};
+        d = {2'b0,bits[12]} + {2'b0,bits[13]} + {2'b0,bits[14]} + {2'b0,bits[15]};
+        count_dwords = ({2'b0,a} + {2'b0,b}) + ({2'b0,c} + {2'b0,d});
+    end
+endfunction
+
 // ====================================================================
 // Parameter|Wire|Reg
 // ====================================================================
@@ -120,25 +132,26 @@ reg     [31:0]       iodata                 ;
 reg     [5:0]        io_addr                ;
 
 integer i;
-reg     [13:0]       bar0_wr_word_addr      ;
-reg     [13:0]       bar0_wr_word_tmp       ;
+reg     [7:0]        bar0_wr_word_addr      ;
 reg     [10:0]       bar0_wr_dw_count       ;
 reg     [10:0]       bar0_wr_len            ;
 reg     [3:0]        bar0_wr_first_be       ;
 reg     [3:0]        bar0_wr_last_be        ;
-integer              bar0_wr_lane           ;
-integer              bar0_wr_count_tmp      ;
-reg     [31:0]       bar0_wr_data_tmp       ;
-reg     [3:0]        bar0_wr_be_tmp          ;
 integer              bar0_rd_lane           ;
-reg     [13:0]       bar0_rd_word_addr      ;
-reg     [15:0]       bar0_bank_we           ;
-reg     [63:0]       bar0_bank_be           ;
-reg     [143:0]      bar0_bank_wr_addr      ;
-reg     [511:0]      bar0_bank_wr_data      ;
-reg     [143:0]      bar0_bank_rd_addr      ;
+reg     [7:0]        bar0_rd_word_addr      ;
+wire    [15:0]       bar0_bank_we           ;
+wire    [63:0]       bar0_bank_be           ;
+wire    [63:0]       bar0_bank_wr_addr      ;
+wire    [511:0]      bar0_bank_wr_data      ;
+reg     [63:0]       bar0_bank_rd_addr      ;
 wire    [511:0]      bar0_bank_rd_data      ;
 integer              bar0_bank              ;
+wire    [15:0]       bar0_payload_valid = tl_rx_valid_2ff &
+    (tl_rx_sop_2ff ? (mem_addr_is_64bit ? 16'h0fff : 16'h1fff) : 16'hffff);
+wire    [4:0]        bar0_beat_count = count_dwords(bar0_payload_valid);
+wire    [7:0]        bar0_lane_addr [0:15];
+wire    [10:0]       bar0_lane_count [0:15];
+wire    [3:0]        bar0_lane_be [0:15];
 
 reg     [15:0]       mrdata_cycle_valid     ;
 reg     [9:0]        mrdata_cycle           ;
@@ -342,7 +355,7 @@ end
 // Sixteen dword-wide banks sustain one 512-bit receive beat per cycle.
 always@(posedge tl_clk_user or posedge tl_rst_user) begin
     if(tl_rst_user) begin
-        bar0_wr_word_addr <= 14'd0;
+        bar0_wr_word_addr <= 8'd0;
         bar0_wr_dw_count <= 11'd0;
         bar0_wr_len <= 11'd0;
         bar0_wr_first_be <= 4'd0;
@@ -353,8 +366,8 @@ always@(posedge tl_clk_user or posedge tl_rst_user) begin
             tl_rx_data_ff[511:509] == `MWR_FMT_4DW) &&
            tl_rx_data_ff[508:504] == `MWR_TYPE) begin
             bar0_wr_word_addr <= (tl_rx_data_ff[511:509] == `MWR_FMT_4DW)
-                               ? tl_rx_data_ff[398:386]
-                               : tl_rx_data_ff[430:418];
+                               ? tl_rx_data_ff[393:386]
+                               : tl_rx_data_ff[425:418];
             bar0_wr_dw_count <= 11'd0;
             bar0_wr_len <= (|tl_rx_data_ff[489:480])
                          ? {1'b0, tl_rx_data_ff[489:480]} : 11'd1024;
@@ -362,81 +375,81 @@ always@(posedge tl_clk_user or posedge tl_rst_user) begin
             bar0_wr_last_be <= tl_rx_data_ff[455:452];
         end
         if(memwr_flag) begin
-            bar0_wr_word_addr <= bar0_wr_word_tmp;
-            bar0_wr_dw_count <= bar0_wr_count_tmp[10:0];
+            bar0_wr_word_addr <= bar0_wr_word_addr + bar0_beat_count;
+            bar0_wr_dw_count <= bar0_wr_dw_count + bar0_beat_count;
         end
     end
 end
 
-always@(*) begin
-    bar0_bank_we = 16'd0;
-    bar0_bank_be = 64'd0;
-    bar0_bank_wr_addr = 144'd0;
-    bar0_bank_wr_data = 512'd0;
-    bar0_wr_word_tmp = bar0_wr_word_addr;
-    bar0_wr_count_tmp = bar0_wr_dw_count;
-    bar0_wr_data_tmp = 32'd0;
-    bar0_wr_be_tmp = 4'd0;
-    if(memwr_flag) begin
-        for(bar0_wr_lane = 15; bar0_wr_lane >= 0; bar0_wr_lane = bar0_wr_lane - 1) begin
-            if(tl_rx_valid_2ff[bar0_wr_lane] &&
-               (!tl_rx_sop_2ff ||
-                (mem_addr_is_64bit ? (bar0_wr_lane <= 11) : (bar0_wr_lane <= 12)))) begin
-                bar0_wr_data_tmp = tl_rx_data_2ff[bar0_wr_lane*32 +: 32];
-                if(bar0_wr_count_tmp == 0)
-                    bar0_wr_be_tmp = bar0_wr_first_be;
-                else if(bar0_wr_count_tmp == bar0_wr_len - 1'b1)
-                    bar0_wr_be_tmp = bar0_wr_last_be;
-                else
-                    bar0_wr_be_tmp = 4'hf;
-
-                if(bar0_wr_word_tmp < 14'd8192) begin
-                    bar0_bank_we[bar0_wr_word_tmp[3:0]] = 1'b1;
-                    bar0_bank_be[bar0_wr_word_tmp[3:0]*4 +: 4] = bar0_wr_be_tmp;
-                    bar0_bank_wr_addr[bar0_wr_word_tmp[3:0]*9 +: 9] =
-                        bar0_wr_word_tmp[12:4];
-                    bar0_bank_wr_data[bar0_wr_word_tmp[3:0]*32 +: 32] =
-                        bar0_wr_data_tmp;
-                end
-                bar0_wr_word_tmp = bar0_wr_word_tmp + 1'b1;
-                bar0_wr_count_tmp = bar0_wr_count_tmp + 1;
-            end
-        end
+genvar bar0_lane_gen, bar0_bank_gen;
+generate
+    for (bar0_lane_gen = 0; bar0_lane_gen < 16; bar0_lane_gen = bar0_lane_gen + 1) begin : g_bar0_lane
+        wire [4:0] preceding = count_dwords(bar0_payload_valid &
+                                                  (16'hffff << (bar0_lane_gen + 1)));
+        assign bar0_lane_addr[bar0_lane_gen] = bar0_wr_word_addr + preceding;
+        assign bar0_lane_count[bar0_lane_gen] = bar0_wr_dw_count + preceding;
+        assign bar0_lane_be[bar0_lane_gen] =
+            bar0_lane_count[bar0_lane_gen] == 0 ? bar0_wr_first_be :
+            bar0_lane_count[bar0_lane_gen] == bar0_wr_len - 1'b1 ? bar0_wr_last_be : 4'hf;
     end
+endgenerate
 
-    bar0_rd_word_addr = 14'd0;
-    bar0_bank_rd_addr = 144'd0;
+always@(*) begin
+    bar0_rd_word_addr = 8'd0;
+    bar0_bank_rd_addr = 64'd0;
     bar0_rd_word_addr = memrd_addr + {mrdata_rd_addr, 4'b0};
     for(bar0_bank = 0; bar0_bank < 16; bar0_bank = bar0_bank + 1) begin
         if(bar0_bank >= bar0_rd_word_addr[3:0])
-            bar0_bank_rd_addr[bar0_bank*9 +: 9] = bar0_rd_word_addr[12:4];
+            bar0_bank_rd_addr[bar0_bank*4 +: 4] = bar0_rd_word_addr[7:4];
         else
-            bar0_bank_rd_addr[bar0_bank*9 +: 9] = bar0_rd_word_addr[12:4] + 1'b1;
+            bar0_bank_rd_addr[bar0_bank*4 +: 4] = bar0_rd_word_addr[7:4] + 1'b1;
     end
 
     mrdata_rd_data = 512'd0;
     for(bar0_rd_lane = 0; bar0_rd_lane < 16; bar0_rd_lane = bar0_rd_lane + 1) begin
         bar0_rd_word_addr = memrd_addr + {mrdata_rd_addr_dly, 4'b0} + (15 - bar0_rd_lane);
-        if(bar0_rd_word_addr < 14'd8192)
-            mrdata_rd_data[bar0_rd_lane*32 +: 32] =
-                bar0_bank_rd_data[bar0_rd_word_addr[3:0]*32 +: 32];
+        mrdata_rd_data[bar0_rd_lane*32 +: 32] =
+            bar0_bank_rd_data[bar0_rd_word_addr[3:0]*32 +: 32];
     end
 end
 
-genvar bar0_bank_gen;
 generate
     for(bar0_bank_gen = 0; bar0_bank_gen < 16; bar0_bank_gen = bar0_bank_gen + 1) begin : g_bar0_ram
+        reg we;
+        reg [3:0] be;
+        reg [3:0] addr;
+        reg [31:0] data;
+        integer lane;
+        always @(*) begin
+            we = 1'b0;
+            be = 4'd0;
+            addr = 4'd0;
+            data = 32'd0;
+            for (lane = 0; lane < 16; lane = lane + 1) begin
+                if (memwr_flag && bar0_payload_valid[lane] &&
+                    bar0_lane_addr[lane][3:0] == bar0_bank_gen) begin
+                    we = 1'b1;
+                    be = be | bar0_lane_be[lane];
+                    addr = addr | bar0_lane_addr[lane][7:4];
+                    data = data | tl_rx_data_2ff[lane*32 +: 32];
+                end
+            end
+        end
+        assign bar0_bank_we[bar0_bank_gen] = we;
+        assign bar0_bank_be[bar0_bank_gen*4 +: 4] = be;
+        assign bar0_bank_wr_addr[bar0_bank_gen*4 +: 4] = addr;
+        assign bar0_bank_wr_data[bar0_bank_gen*32 +: 32] = data;
         ram #(
             .MODE           ("DP"       ),
             .BYTE_SIZE      (8          ),
             .USE_BYTE_WEA   (1          ),
             .DATAWIDTH_A    (32         ),
-            .ADDRWIDTH_A    (9          ),
-            .DATADEPTH_A    (512        ),
+            .ADDRWIDTH_A    (4          ),
+            .DATADEPTH_A    (16         ),
             .USE_BYTE_WEB   (1          ),
             .DATAWIDTH_B    (32         ),
-            .ADDRWIDTH_B    (9          ),
-            .DATADEPTH_B    (512        )
+            .ADDRWIDTH_B    (4          ),
+            .DATADEPTH_B    (16         )
         ) u_bar0_bank (
             .clka           (tl_clk_user),
             .rsta           (tl_rst_user),
@@ -444,7 +457,7 @@ generate
             .ocea           (1'b1),
             .wea            (bar0_bank_be[bar0_bank_gen*4 +: 4]),
             .dia            (bar0_bank_wr_data[bar0_bank_gen*32 +: 32]),
-            .addra          (bar0_bank_wr_addr[bar0_bank_gen*9 +: 9]),
+            .addra          (bar0_bank_wr_addr[bar0_bank_gen*4 +: 4]),
             .doa            (),
             .clkb           (tl_clk_user),
             .rstb           (tl_rst_user),
@@ -452,7 +465,7 @@ generate
             .oceb           (1'b1),
             .web            (4'b0),
             .dib            (32'b0),
-            .addrb          (bar0_bank_rd_addr[bar0_bank_gen*9 +: 9]),
+            .addrb          (bar0_bank_rd_addr[bar0_bank_gen*4 +: 4]),
             .dob            (bar0_bank_rd_data[bar0_bank_gen*32 +: 32]),
             .ecc_sbiterrinj (1'b0),
             .ecc_dbiterrinj (1'b0),

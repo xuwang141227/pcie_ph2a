@@ -88,7 +88,9 @@ class Bar0Gui:
         if options:
             if self.device_choice.get() not in self.devices:
                 self.device_choice.set(options[0])
-            self.status.set(f"已识别 {len(options)} 个设备；BAR0 至少 {BAR0_SIZE} 字节。")
+            self.status.set(
+                f"已识别 {len(options)} 个设备；BAR0 32 KiB 窗口每 1 KiB 镜像。"
+            )
         else:
             self.device_choice.set("")
             self.status.set(

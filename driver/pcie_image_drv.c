@@ -24,6 +24,8 @@
 #include "pcie_image.h"
 
 #define DRIVER_NAME "pcie_image"
+#define IMAGE_BAR 2
+#define IMAGE_BAR_BYTES 0x100000
 #define REG_ID_VERSION 0x000
 #define REG_CONTROL 0x004
 #define REG_STATUS 0x008
@@ -257,8 +259,13 @@ static int image_mmap(struct file *file, struct vm_area_struct *vma)
 		ret = idev->removed ? -ENODEV : -EINVAL;
 	} else {
 		vma->vm_pgoff = 0;
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0)
+		vm_flags_set(vma, VM_DONTDUMP | VM_DONTEXPAND);
+		vm_flags_clear(vma, VM_MAYWRITE | VM_WRITE);
+#else
 		vma->vm_flags |= VM_DONTDUMP | VM_DONTEXPAND;
 		vma->vm_flags &= ~(VM_MAYWRITE | VM_WRITE);
+#endif
 		vma->vm_private_data = idev;
 		ret = dma_mmap_coherent(&idev->pdev->dev, vma,
 					idev->slots[slot].cpu_addr,
@@ -558,9 +565,12 @@ static int image_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	struct image_dev *idev;
 	int ret, i, minor, irq;
 
-	if (pci_resource_len(pdev, 2) < 0x1000 ||
-	    !(pci_resource_flags(pdev, 2) & IORESOURCE_MEM))
+	if (pci_resource_len(pdev, IMAGE_BAR) != IMAGE_BAR_BYTES ||
+	    !(pci_resource_flags(pdev, IMAGE_BAR) & IORESOURCE_MEM) ||
+	    !(pci_resource_flags(pdev, IMAGE_BAR) & IORESOURCE_MEM_64)) {
+		dev_err(&pdev->dev, "BAR2 must be a 64-bit 1 MiB memory BAR\n");
 		return -ENODEV;
+	}
 
 	idev = kzalloc(sizeof(*idev), GFP_KERNEL);
 	if (!idev)
@@ -583,7 +593,7 @@ static int image_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (ret)
 		goto err_regions;
 	pci_set_master(pdev);
-	idev->bar = pci_iomap(pdev, 2, 0);
+	idev->bar = pci_iomap(pdev, IMAGE_BAR, 0);
 	if (!idev->bar) {
 		ret = -ENOMEM;
 		goto err_master;

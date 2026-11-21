@@ -1,7 +1,7 @@
 # PH2A PCIe 图像 DMA 工程
 
 本分支从 APUG038 EP 示例提取了图像 DMA 所需文件，保留原厂 EP 顶层、
-公共 RTL、板级约束、PLL 和 PCIe IP 配置，并整合 32 KiB BAR0 覆盖实现。
+公共 RTL、板级约束、PLL 和 PCIe IP 配置，并整合 BAR0 测试存储实现。
 原始示例和其他文件仍保留在 `copilot/ep-bar0-32k` 分支，不在本分支重复存放。
 
 | 路径 | 内容 |
@@ -20,12 +20,15 @@
 ## FPGA 工程
 
 在 Tang Dynasty 中打开上述 `.al` 文件，使用本目录下的 PCIe IP 配置：
-Gen2 ×4，`tl_clk_user` 为 80 MHz；BAR0 为 32 KiB 32-bit Memory BAR，
-BAR2 为 1 MiB 32-bit 非预取 Memory BAR（DMA 控制），PF0 class code 为
-`0x078000` 并使用 Legacy INTA。驱动通过 PCI BAR index 2 访问 BAR2；
-BAR2 是 32 位 BAR 不改变该索引。现有 IP
-生成文件中部分辅助文件来自原厂示例，不保证与 32 KiB 覆盖配置一致；
-**构建前应根据本分支 `.ipc` 重新生成 PCIe IP 及其所有输出文件**。
+Gen2 ×4，`tl_clk_user` 为 80 MHz；BAR0 为 32 KiB 32-bit 非预取
+Memory BAR，但内部只有 1 KiB RAM，整个 BAR0 按低 10 位地址循环镜像。
+BAR1 是 256 字节 I/O，BAR2/3 是 1 MiB 64-bit 非预取 Memory BAR
+（DMA 控制），BAR4/5 是 1 MiB 64-bit 预取 Memory BAR（当前未实现业务）。
+PF0 class code 为 `0x040000`，使用 Legacy INTA；驱动仍通过 PCI resource
+index 2 访问 BAR2，并要求其为 64 位、1 MiB。
+工程入口下的 `.ipc` 和 PCIe wrapper 已与 `config/` 截图及
+`fpga/Design/case_ep/al_ip/` 中的生成文件同步。若修改 IP 配置，应重新生成
+PCIe IP 及全部输出，并以实际枚举结果为准。
 PLL 的 `tl_clk_user` 输出配置为 80 MHz，EP 顶层按 `EP_TL_CLK_REQ`
 设置帧周期；80,000,000 个时钟周期对应 1 fps。实际 PCIe 链路按用户环境为
 Gen2 ×4，链路速率与用户时钟频率是独立配置。
@@ -55,5 +58,5 @@ vvp /tmp/pcie_ep_image_dma_tb
 `tools/requirements.txt` 中的 Pillow。运行 `python3 tools/pcie_image_gui.py`
 并确保有权限访问 `/dev/pcie_image*`；设备不能同时绑定其他 PCI 驱动。
 
-**当前为实现初稿**：驱动尚未在目标 Ubuntu 内核编译，FPGA 尚未完成厂商
-综合/时序或上板联调，DMA 可见性、Legacy 中断和整帧正确性均待验证。
+**当前为实现初稿**：FPGA 尚未完成厂商综合/时序或上板联调；目标内核、
+DMA 可见性、Legacy 中断和整帧正确性均待验证。
