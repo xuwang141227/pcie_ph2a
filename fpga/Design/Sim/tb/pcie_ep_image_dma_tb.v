@@ -18,10 +18,18 @@ module pcie_ep_image_dma_tb;
     integer slot1_dma_packets = 0;
     integer completion_packets = 0;
     reg [31:0] completion_payload = 32'd0;
+    reg [511:0] completion_tlp = 512'd0;
     reg [511:0] stalled_data = 512'd0;
     integer coordinate;
 
     always #5 clk = ~clk;
+
+    function [31:0] host_bytes;
+        input [31:0] data;
+        begin
+            host_bytes = {data[7:0], data[15:8], data[23:16], data[31:24]};
+        end
+    endfunction
 
     pcie_ep_image_dma #(
         .FRAME_BYTES(80),
@@ -34,6 +42,8 @@ module pcie_ep_image_dma_tb;
         .tl_rx_sop(rx_sop),
         .tl_rx_eop(rx_eop),
         .tl_rx_valid(rx_valid),
+        .tl_rx_err(8'd0),
+        .tl_rx_wait(),
         .tl_cfg_busdev(13'h008),
         .tl_cfg_pfregs_cmd(16'h0004),
         .tl_cfg_current_link_speed(3'd2),
@@ -65,7 +75,7 @@ module pcie_ep_image_dma_tb;
             rx_data[455:448] = 8'hff;
             rx_data[447:416] = 32'h0000_0023;
             rx_data[415:384] = 32'habc0_0000 + offset;
-            rx_data[383:352] = value;
+            rx_data[383:352] = host_bytes(value);
             rx_sop = 1'b1;
             rx_eop = 1'b1;
             rx_valid = 16'hf800;
@@ -118,10 +128,82 @@ module pcie_ep_image_dma_tb;
             rx_data[463:456] = 8'h56;
             rx_data[451:448] = 4'hf;
             rx_data[447:416] = 32'habc0_0000 + offset;
-            rx_data[415:384] = value;
+            rx_data[415:384] = host_bytes(value);
             rx_sop = 1'b1;
             rx_eop = 1'b1;
             rx_valid = write_access ? 16'hf000 : 16'he000;
+            @(negedge clk);
+            rx_bardec = 0;
+            rx_data = 0;
+            rx_sop = 0;
+            rx_eop = 0;
+            rx_valid = 0;
+        end
+    endtask
+
+    task byte_read_bar2;
+        input [1:0] byte_offset;
+        begin
+            @(negedge clk);
+            rx_bardec = 48'h4;
+            rx_data = 0;
+            rx_data[511:509] = 3'b000;
+            rx_data[489:480] = 10'd1;
+            rx_data[479:464] = 16'h0100;
+            rx_data[463:456] = 8'h70 + byte_offset;
+            rx_data[451:448] = 4'b0001 << byte_offset;
+            rx_data[447:416] = 32'hfe90_0000;
+            rx_sop = 1;
+            rx_eop = 1;
+            rx_valid = 16'he000;
+            @(negedge clk);
+            rx_bardec = 0;
+            rx_data = 0;
+            rx_sop = 0;
+            rx_eop = 0;
+            rx_valid = 0;
+        end
+    endtask
+
+    task half_read_bar2_64;
+        begin
+            @(negedge clk);
+            rx_bardec = 48'h4;
+            rx_data = 0;
+            rx_data[511:509] = 3'b001;
+            rx_data[489:480] = 10'd1;
+            rx_data[479:464] = 16'h0100;
+            rx_data[463:456] = 8'h79;
+            rx_data[451:448] = 4'b1100;
+            rx_data[447:416] = 32'h0000_0023;
+            rx_data[415:384] = 32'habc0_0000;
+            rx_sop = 1;
+            rx_eop = 1;
+            rx_valid = 16'hf000;
+            @(negedge clk);
+            rx_bardec = 0;
+            rx_data = 0;
+            rx_sop = 0;
+            rx_eop = 0;
+            rx_valid = 0;
+        end
+    endtask
+
+    task byte_write_bar2;
+        input [1:0] byte_offset;
+        input [7:0] value;
+        begin
+            @(negedge clk);
+            rx_bardec = 48'h4;
+            rx_data = 0;
+            rx_data[511:509] = 3'b010;
+            rx_data[489:480] = 10'd1;
+            rx_data[451:448] = 4'b0001 << byte_offset;
+            rx_data[447:416] = 32'hfe90_0020;
+            rx_data[415:384] = host_bytes({24'd0, value} << (8 * byte_offset));
+            rx_sop = 1;
+            rx_eop = 1;
+            rx_valid = 16'hf000;
             @(negedge clk);
             rx_bardec = 0;
             rx_data = 0;
@@ -180,7 +262,8 @@ module pcie_ep_image_dma_tb;
         end
         if (!rst && tx_valid == 16'hf000 && tx_sop && tx_eop &&
             tx_data[511:509] == 3'b010) begin
-            completion_payload = tx_data[415:384];
+            completion_payload = host_bytes(tx_data[415:384]);
+            completion_tlp = tx_data;
             completion_packets = completion_packets + 1;
         end
     end
@@ -231,6 +314,33 @@ module pcie_ep_image_dma_tb;
             $fatal(1);
         end
         access_bar2_32(1'b1, 32'h00c, 32'd0);
+        for (coordinate = 0; coordinate < 4; coordinate = coordinate + 1) begin
+            byte_read_bar2(coordinate);
+            wait (completion_packets == 2 + coordinate);
+            if (completion_tlp[459:448] !== 12'd1 ||
+                completion_tlp[422:416] !== coordinate ||
+                completion_tlp[431:424] !== 8'h70 + coordinate ||
+                completion_tlp[415:384] !== 32'h0100_0100) begin
+                $display("FAIL: byte read completion %0d: %h", coordinate,
+                         completion_tlp[479:384]);
+                $fatal(1);
+            end
+        end
+        half_read_bar2_64();
+        wait (completion_packets == 6);
+        if (completion_tlp[459:448] !== 12'd2 ||
+            completion_tlp[422:416] !== 7'd2 ||
+            completion_tlp[431:424] !== 8'h79 ||
+            completion_tlp[415:384] !== 32'h0100_0100) begin
+            $display("FAIL: 4DW halfword read completion");
+            $fatal(1);
+        end
+        write_bar2(32'h020, 32'h1234_5678);
+        byte_write_bar2(2'd2, 8'hab);
+        if (dut.buffer0_address[31:0] !== 32'h12ab_5678) begin
+            $display("FAIL: byte write corrupted adjacent lanes");
+            $fatal(1);
+        end
         write_bar2(32'h020, 32'h1234_5ff0);
         write_bar2(32'h024, 32'h0000_0001);
         write_bar2(32'h028, 32'h1234_6000);
@@ -260,14 +370,14 @@ module pcie_ep_image_dma_tb;
         end
 
         read_bar2(32'h038);
-        wait (completion_packets == 2);
+        wait (completion_packets == 7);
         if (completion_payload !== 32'd80) begin
             $display("FAIL: BAR2 completion data mismatch: %h",
                      completion_payload);
             $fatal(1);
         end
         read_bar2(32'h1038);
-        wait (completion_packets == 3);
+        wait (completion_packets == 8);
         if (completion_payload !== 32'd0) begin
             $display("FAIL: BAR2 register decode aliased outside register block");
             $fatal(1);

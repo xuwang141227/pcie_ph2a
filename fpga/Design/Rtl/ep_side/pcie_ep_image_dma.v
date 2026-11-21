@@ -12,6 +12,8 @@ module pcie_ep_image_dma #(
     input wire tl_rx_sop,
     input wire tl_rx_eop,
     input wire [15:0] tl_rx_valid,
+    input wire [7:0] tl_rx_err,
+    output wire tl_rx_wait,
     input wire [12:0] tl_cfg_busdev,
     input wire [15:0] tl_cfg_pfregs_cmd,
     input wire [2:0] tl_cfg_current_link_speed,
@@ -106,7 +108,44 @@ module pcie_ep_image_dma #(
     reg [15:0] completion_requester;
     reg [7:0] completion_tag;
     reg [6:0] completion_lower_address;
+    reg [2:0] completion_byte_count;
     reg [31:0] completion_data;
+    reg completion_unsupported;
+    reg [2:0] completion_tc;
+    reg [2:0] completion_attr;
+
+    function [31:0] swap_bytes;
+        input [31:0] value;
+        begin
+            swap_bytes = {value[7:0], value[15:8], value[23:16], value[31:24]};
+        end
+    endfunction
+
+    function [2:0] enabled_span;
+        input [3:0] be;
+        reg [1:0] first, last;
+        begin
+            first = first_byte(be);
+            if (be[3]) last = 2'd3;
+            else if (be[2]) last = 2'd2;
+            else if (be[1]) last = 2'd1;
+            else last = 2'd0;
+            enabled_span = be == 0 ? 3'd1 : {1'b0,last} - {1'b0,first} + 3'd1;
+        end
+    endfunction
+
+    function [1:0] first_byte;
+        input [3:0] be;
+        begin
+            casez (be)
+                4'b???1: first_byte = 2'd0;
+                4'b??10: first_byte = 2'd1;
+                4'b?100: first_byte = 2'd2;
+                4'b1000: first_byte = 2'd3;
+                default: first_byte = 2'd0;
+            endcase
+        end
+    endfunction
 
     wire [2:0] rx_fmt = tl_rx_data[511:509];
     wire [9:0] rx_length = tl_rx_data[489:480];
@@ -116,14 +155,23 @@ module pcie_ep_image_dma #(
                                   rx_fmt == `MRD_FMT_4DW)
                                ? {12'd0, tl_rx_data[403:386], 2'b00}
                                : {12'd0, tl_rx_data[435:418], 2'b00};
-    wire [31:0] rx_bar2_write_data =
-        (rx_fmt == `MWR_FMT_4DW) ? tl_rx_data[383:352] : tl_rx_data[415:384];
+    wire [31:0] rx_bar2_write_raw = swap_bytes(
+        (rx_fmt == `MWR_FMT_4DW) ? tl_rx_data[383:352] : tl_rx_data[415:384]);
+    wire [31:0] rx_write_mask = {{8{rx_first_be[3]}}, {8{rx_first_be[2]}},
+                                 {8{rx_first_be[1]}}, {8{rx_first_be[0]}}};
+    wire [31:0] rx_bar2_write_data = rx_bar2_write_raw & rx_write_mask;
     wire [15:0] rx_requester = tl_rx_data[479:464];
     wire [7:0] rx_tag = tl_rx_data[463:456];
+    wire bar2_read = tl_rx_sop && (|tl_rx_valid) && tl_rx_bardec[2] &&
+                     tl_rx_data[508:504] == `MRD_TYPE &&
+                     (rx_fmt == `MRD_FMT_4DW || rx_fmt == `MRD_FMT_3DW);
+    assign tl_rx_wait = bar2_read && completion_pending;
     wire control_write =
-        tl_rx_sop && tl_rx_valid != 16'd0 && tl_rx_bardec[2] && tl_rx_eop &&
-        rx_length == 10'd1 && rx_first_be == 4'hf &&
+        !tl_rx_wait && tl_rx_sop && tl_rx_valid != 16'd0 && tl_rx_bardec[2] && tl_rx_eop &&
+        !(|tl_rx_err) &&
+        rx_length == 10'd1 &&
         (rx_last_be == 4'h0 || rx_last_be == 4'hf) &&
+        tl_rx_data[508:504] == `MWR_TYPE &&
         (rx_fmt == `MWR_FMT_4DW || rx_fmt == `MWR_FMT_3DW);
     wire stop_command = control_write && rx_bar2_offset == REG_CONTROL &&
                         rx_bar2_write_data[1];
@@ -158,15 +206,10 @@ module pcie_ep_image_dma #(
         16'hffff << (16 - (4 + first_beat_dwords));
     wire [4:0] posted_data_credits_needed =
         (tx_packet_dwords + 5'd3) >> 2;
-    wire [4:0] completion_data_credits_needed = 5'd1;
     wire can_send_posted =
         (tl_tx_credits[15] ||
          (tl_tx_credits[14:0] >= posted_data_credits_needed)) &&
         (tl_tx_credits[27] || (tl_tx_credits[26:16] != 11'd0));
-    wire can_send_completion =
-        (tl_tx_credits[79] ||
-         (tl_tx_credits[78:64] >= completion_data_credits_needed)) &&
-        (tl_tx_credits[91] || (tl_tx_credits[90:80] != 11'd0));
     assign tl_tx_err = 8'd0;
     assign tl_tx_stream = 1'b0;
     assign irq_pending = |(interrupt_status & interrupt_enable);
@@ -349,15 +392,21 @@ module pcie_ep_image_dma #(
             completion_requester <= 16'd0;
             completion_tag <= 8'd0;
             completion_lower_address <= 7'd0;
+            completion_byte_count <= 3'd0;
             completion_data <= 32'd0;
+            completion_unsupported <= 1'b0;
+            completion_tc <= 3'd0;
+            completion_attr <= 3'd0;
             tl_tx_data <= 512'd0;
             tl_tx_eop <= 1'b0;
             tl_tx_sop <= 1'b0;
             tl_tx_valid <= 16'd0;
         end else begin
-            if (tl_rx_sop && tl_rx_valid != 16'd0 && tl_rx_bardec[2]) begin
-                if (rx_fmt == `MWR_FMT_4DW || rx_fmt == `MWR_FMT_3DW) begin
-                    if (rx_length != 10'd1 || rx_first_be != 4'hf ||
+            if (!tl_rx_wait && tl_rx_sop && tl_rx_valid != 16'd0 &&
+                tl_rx_bardec[2] && !(|tl_rx_err)) begin
+                if ((rx_fmt == `MWR_FMT_4DW || rx_fmt == `MWR_FMT_3DW) &&
+                    tl_rx_data[508:504] == `MWR_TYPE) begin
+                    if (rx_length != 10'd1 ||
                         (rx_last_be != 4'h0 && rx_last_be != 4'hf) ||
                         !tl_rx_eop) begin
                         error_status <= 32'h00000001;
@@ -410,13 +459,15 @@ module pcie_ep_image_dma #(
                                     error_status <= 32'h00000003;
                                     interrupt_status[2] <= 1'b1;
                                 end else
-                                    pattern_select <= rx_bar2_write_data[2:0];
+                                    pattern_select <= (pattern_select & ~rx_write_mask[2:0]) |
+                                                      rx_bar2_write_data[2:0];
                             end
                             REG_IRQ_STATUS:
                                 interrupt_status <= interrupt_status &
                                                     ~rx_bar2_write_data[3:0];
                             REG_IRQ_ENABLE:
-                                interrupt_enable <= rx_bar2_write_data[3:0];
+                                interrupt_enable <= (interrupt_enable & ~rx_write_mask[3:0]) |
+                                                    rx_bar2_write_data[3:0];
                             REG_ERROR:
                                 error_status <= error_status & ~rx_bar2_write_data;
                             REG_BUF0_ADDR_LO, REG_BUF0_ADDR_HI: begin
@@ -426,9 +477,11 @@ module pcie_ep_image_dma #(
                                         interrupt_status[2] <= 1'b1;
                                     end
                                 else if (rx_bar2_offset == REG_BUF0_ADDR_LO)
-                                    buffer0_address[31:0] <= rx_bar2_write_data;
+                                    buffer0_address[31:0] <= (buffer0_address[31:0] & ~rx_write_mask) |
+                                                             rx_bar2_write_data;
                                 else
-                                    buffer0_address[63:32] <= rx_bar2_write_data;
+                                    buffer0_address[63:32] <= (buffer0_address[63:32] & ~rx_write_mask) |
+                                                              rx_bar2_write_data;
                             end
                             REG_BUF1_ADDR_LO, REG_BUF1_ADDR_HI: begin
                                 if (dma_running || frame_busy)
@@ -437,9 +490,11 @@ module pcie_ep_image_dma #(
                                         interrupt_status[2] <= 1'b1;
                                     end
                                 else if (rx_bar2_offset == REG_BUF1_ADDR_LO)
-                                    buffer1_address[31:0] <= rx_bar2_write_data;
+                                    buffer1_address[31:0] <= (buffer1_address[31:0] & ~rx_write_mask) |
+                                                             rx_bar2_write_data;
                                 else
-                                    buffer1_address[63:32] <= rx_bar2_write_data;
+                                    buffer1_address[63:32] <= (buffer1_address[63:32] & ~rx_write_mask) |
+                                                              rx_bar2_write_data;
                             end
                             default: begin
                                 error_status <= 32'h00000004;
@@ -448,18 +503,17 @@ module pcie_ep_image_dma #(
                         endcase
                     end
                 end
-                if ((rx_fmt == `MRD_FMT_4DW || rx_fmt == `MRD_FMT_3DW) &&
-                    rx_length == 10'd1 && rx_first_be == 4'hf && tl_rx_eop) begin
-                    if (completion_pending) begin
-                        error_status <= 32'h00000005;
-                        interrupt_status[2] <= 1'b1;
-                    end else begin
+                if (bar2_read && tl_rx_eop) begin
                         completion_pending <= 1'b1;
                         completion_requester <= rx_requester;
                         completion_tag <= rx_tag;
-                        completion_lower_address <= rx_bar2_offset[6:0];
-                        completion_data <= register_read(rx_bar2_offset);
-                    end
+                        completion_tc <= tl_rx_data[502:500];
+                        completion_attr <= {tl_rx_data[498], tl_rx_data[493:492]};
+                        completion_unsupported <= rx_length != 10'd1;
+                        completion_lower_address <= rx_bar2_offset[6:0] +
+                                                    first_byte(rx_first_be);
+                        completion_byte_count <= enabled_span(rx_first_be);
+                        completion_data <= swap_bytes(register_read(rx_bar2_offset));
                 end
             end
 
@@ -581,18 +635,22 @@ module pcie_ep_image_dma #(
                         completion_pending <= 1'b0;
                 end
             end else if (!tx_pending &&
-                ((completion_pending && can_send_completion) ||
+                (completion_pending ||
                  (!completion_pending && can_send_posted &&
                   posted_credit_delay == 2'd0))) begin
                 if (completion_pending) begin
                     tl_tx_data <= {
-                        `CPLD_FMT, `CPLD_TYPE, 1'b0, 3'b000, 1'b0, 1'b0,
-                        1'b0, 1'b0, 1'b0, 1'b0, 2'b00, 2'b00, 10'd1,
-                        {tl_cfg_busdev, 3'b000}, 3'b000, 1'b0, 12'd4,
+                        (completion_unsupported ? `CPL_FMT : `CPLD_FMT),
+                        `CPLD_TYPE, 1'b0, completion_tc, 1'b0, completion_attr[2],
+                        1'b0, 1'b0, 1'b0, 1'b0, completion_attr[1:0], 2'b00,
+                        (completion_unsupported ? 10'd0 : 10'd1),
+                        {tl_cfg_busdev, 3'b000},
+                        (completion_unsupported ? 3'b001 : 3'b000), 1'b0,
+                        (completion_unsupported ? 12'd0 : {9'd0, completion_byte_count}),
                         completion_requester, completion_tag, 1'b0,
                         completion_lower_address, completion_data, 384'd0
                     };
-                    tl_tx_valid <= 16'hf000;
+                    tl_tx_valid <= completion_unsupported ? 16'he000 : 16'hf000;
                     tx_is_dma <= 1'b0;
                     tx_pending <= 1'b1;
                     tx_phase <= 1'b0;

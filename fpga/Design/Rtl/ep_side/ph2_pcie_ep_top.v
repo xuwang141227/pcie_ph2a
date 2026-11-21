@@ -93,6 +93,8 @@
 
     // Rx interface
     wire                tl_rx_wait                              ;
+    wire                ep_rx_wait                              ;
+    wire                image_rx_wait                           ;
     wire                tl_rx_masknp                            ;
     wire  [47:0]        tl_rx_bardec                            ;
     wire  [511:0]       tl_rx_data                              ;
@@ -132,6 +134,7 @@
     wire                tx_mux_valid;
     wire                tx_mux_eop;
 
+    assign tl_rx_wait = ep_rx_wait || image_rx_wait;
     assign tx_mux_dma = tx_mux_locked ? tx_mux_owner_dma :
         ((|image_tx_valid) && (!(|ep_tx_valid) || tx_mux_prefer_dma));
     assign tx_mux_valid = tx_mux_dma ? (|image_tx_valid) : (|ep_tx_valid);
@@ -431,15 +434,15 @@ pcie_ep_engine u_pcie_ep_engine(
     .tl_clk_user                             (tl_clk_user                             ),
     .tl_rst_user                             (tl_rst_user                             ),
     // Rx interface
-    .tl_rx_wait                              (tl_rx_wait                              ),
+    .tl_rx_wait                              (ep_rx_wait                              ),
     .tl_rx_masknp                            (tl_rx_masknp                            ),
     .tl_rx_bardec                            (tl_rx_bardec                            ),
     .tl_rx_data                              (tl_rx_data                              ),
-    .tl_rx_eop                               (tl_rx_eop                               ),
+    .tl_rx_eop                               (tl_rx_eop && !tl_rx_wait                ),
     .tl_rx_err                               (tl_rx_err                               ),
     .tl_rx_mchit                             (tl_rx_mchit                             ),
-    .tl_rx_sop                               (tl_rx_sop                               ),
-    .tl_rx_valid                             (tl_rx_valid                             ),
+    .tl_rx_sop                               (tl_rx_sop && !tl_rx_wait                ),
+    .tl_rx_valid                             (tl_rx_wait ? 16'd0 : tl_rx_valid        ),
 `ifdef PH2_PCIE_MSIX_INT_ENABLE
     .tl_int_msix_trigger                     (tl_int_msix_trigger                     ),
 `else
@@ -467,6 +470,8 @@ pcie_ep_image_dma #(
     .tl_rx_sop                               (tl_rx_sop                               ),
     .tl_rx_eop                               (tl_rx_eop                               ),
     .tl_rx_valid                             (tl_rx_valid                             ),
+    .tl_rx_err                               (tl_rx_err                               ),
+    .tl_rx_wait                              (image_rx_wait                           ),
     .tl_cfg_busdev                           (tl_cfg_busdev                           ),
     .tl_cfg_pfregs_cmd                       (tl_cfg_pfregs_cmd                       ),
     .tl_cfg_current_link_speed               (tl_cfg_current_link_speed               ),

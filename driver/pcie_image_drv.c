@@ -563,6 +563,7 @@ static irqreturn_t image_irq(int irq, void *data)
 static int image_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 {
 	struct image_dev *idev;
+	u32 version;
 	int ret, i, minor, irq;
 
 	if (pci_resource_len(pdev, IMAGE_BAR) != IMAGE_BAR_BYTES ||
@@ -598,7 +599,11 @@ static int image_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		ret = -ENOMEM;
 		goto err_master;
 	}
-	if (image_readl(idev, REG_ID_VERSION) != IMAGE_ABI_VERSION) {
+	version = image_readl(idev, REG_ID_VERSION);
+	if (version != IMAGE_ABI_VERSION) {
+		dev_err(&pdev->dev,
+			"BAR2 ID_VERSION %#010x, expected %#010x (BAR2 %pR)\n",
+			version, IMAGE_ABI_VERSION, &pdev->resource[IMAGE_BAR]);
 		ret = -ENODEV;
 		goto err_iounmap;
 	}

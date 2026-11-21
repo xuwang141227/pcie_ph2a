@@ -47,9 +47,14 @@ iverilog -g2012 -Wall -I fpga/Design/Rtl/common -s pcie_ep_image_dma_tb \
   -o /tmp/pcie_ep_image_dma_tb fpga/Design/Sim/tb/pcie_ep_image_dma_tb.v \
   fpga/Design/Rtl/ep_side/pcie_ep_image_dma.v
 vvp /tmp/pcie_ep_image_dma_tb
+
+iverilog -g2012 -Wall -I fpga/Design/Rtl/common -s pcie_ep_bar2_tb \
+  -o /tmp/pcie_ep_bar2_tb fpga/Design/Sim/tb/pcie_ep_bar2_tb.v \
+  fpga/Design/Rtl/ep_side/pcie_ep_image_dma.v
+vvp /tmp/pcie_ep_bar2_tb
 ```
 
-完整 PCIe 链路仿真需要厂商 IP 模型，这两个测试不替代链路仿真。
+完整 PCIe 链路仿真需要厂商 IP 模型，这些测试不替代链路仿真。
 
 ## Ubuntu 主机
 
@@ -57,6 +62,16 @@ vvp /tmp/pcie_ep_image_dma_tb
 `make -C driver`。界面支持 Ubuntu 20.04 的 Python 3.8，需要 Tkinter 和
 `tools/requirements.txt` 中的 Pillow。运行 `python3 tools/pcie_image_gui.py`
 并确保有权限访问 `/dev/pcie_image*`；设备不能同时绑定其他 PCI 驱动。
+
+BAR2 的 `ID_VERSION` 位于偏移 `0x0`，32 位读值为 `0x00010001`，
+按地址递增的字节为 `01 00 01 00`。BAR2 地址由系统分配，不应假设固定为
+`0xfe900000`。如果驱动加载失败，查看 `lspci -d 1edb:abcd -vv` 中
+的 Region 2、Memory enable 状态和 `dmesg` 中的 `pcie_image` 报错；
+驱动失败退出后设备可能已禁用，此时 `/dev/mem` 读全 `ff` 不能单独证明
+RTL 出错。新 RTL 须重新综合、烧录后再进行测试。
+BAR2 控制寄存器支持单 DWORD 内的字节、半字和 DWORD 访问；多 DWORD
+读请求返回 Unsupported Request，多 DWORD 写请求不执行并设置错误状态。
+驱动仅使用对齐的 DWORD 访问。接口对应手册 UG1112 1.2 第 2.2、2.3 节。
 
 **当前为实现初稿**：FPGA 尚未完成厂商综合/时序或上板联调；目标内核、
 DMA 可见性、Legacy 中断和整帧正确性均待验证。
